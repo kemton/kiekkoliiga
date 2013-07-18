@@ -1,0 +1,8 @@
+html { 
+	background: url(images/bg.png) no-repeat center center fixed #d8d8d8; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	height: 100%;
+}

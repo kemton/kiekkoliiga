@@ -1,0 +1,109 @@
+RewriteEngine On
+RewriteBase /
+
+#Header set X-UA-Compatible "IE=Edge,chrome=1"
+
+# New ModRewrite rules:
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]
+
+#RewriteRule ^([A-Za-z0-9-]+)/?$ /index.php?action=$1 [L]
+#RewriteRule paitsio/([^/]*)$ /index.php?action=paitsio&id=$1 [L]
+#RewriteRule statistics/([^/]*)/([^/]*)/([^/]*)$ /index.php?action=statistics&type=$1&id=$2&season=$3 [L]
+#RewriteRule board-info/([^/]*)$ /index.php?action=board-info&id=$1 [L]
+#RewriteRule player/([^/]*)$ /index.php?action=player&id=$1 [L]
+#RewriteRule player/([^/]*)/([^/]*)$ /index.php?action=player&id=$1&season=$2 [L]
+#RewriteRule team/([^/]*)$ /index.php?action=team&id=$1 [L]
+
+ErrorDocument 404 http://deve.kiekkoliiga.net/http-error/
+#--------------------
+
+#RewriteRule pelaaja/([^/]*)$ /tilastot/?tilasto=pelaaja&id=$1 [L]
+#RewriteRule pelaaja/([^/]*)/([^/]*)$ /tilastot/?tilasto=pelaaja&id=$1&kausi=$2 [L]
+#RewriteRule joukkue/([^/]*)$ /tilastot/?tilasto=joukkue&id=$1 [L]
+#RewriteRule joukkue/([^/]*)/kausi/([^/]*)$ /tilastot/?tilasto=joukkue&id=$1&kausi=$2 [L]
+#RewriteRule pelikiellot$ /tilastot/?tilasto=pelikiellot [L]
+#RewriteRule irc$ /etusivu/irc.php [L]
+#RewriteRule sarjataulukko/([^/]*)/([^/]*)$ /tilastot/?tilasto=sarjataulukko&id=$1&kausi=$2 [L]
+#RewriteRule pisteporssi/([^/]*)/([^/]*)$ tilastot/?tilasto=pisteporssi&id=$1&kausi=$2 [L]
+#RewriteRule ottelut/([^/]*)/([^/]*)$ tilastot/?tilasto=ottelut&id=$1&kausi=$2 [L]
+
+#RewriteRule ohjaa/([^/]*)$ /ohjaa.php?id=$1 [L]
+
+#Options +FollowSymLinks
+Options -Indexes
+
+#ErrorDocument 403 /error.html
+#order deny,allow
+#deny from all
+#allow from 88.112.191.152
+
+
+#<ifModule mod_expires.c>
+#
+# ExpiresActive On
+# ExpiresDefault A0
+#
+# <FilesMatch "\.(eot|woff|otf|ttf|svg)$">
+#  ExpiresDefault A29030400
+# </FilesMatch>
+# 
+# <FilesMatch "\.(jpg|jpeg|png|gif|swf)$">
+#  ExpiresDefault A604800
+# </FilesMatch>
+# 
+# <FilesMatch "\.(txt|xml|js|css))$">
+#  ExpiresDefault A10800
+# </FilesMatch>
+# 
+# </ifModule>
+
+
+# <ifModule mod_headers.c>
+#  <FilesMatch "\.(eot|woff|otf|ttf|svg)$">
+#   Header set Cache-Control "max-age=29030400, public"
+#  </FilesMatch>
+#  
+#  <FilesMatch "\.(jpg|jpeg|png|gif|swf)$">
+#   Header set Cache-Control "max-age=604800, public"
+#  </FilesMatch>
+# 
+#  <FilesMatch "\.(txt|xml|js|css)$">
+#   Header set Cache-Control "max-age=10800"
+#  </FilesMatch>
+# </ifModule>
+
+# EX1
+<ifModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault A300
+ExpiresByType image/x-icon A2592000
+ExpiresByType application/x-javascript A3600
+#ExpiresByType text/css A3600
+#ExpiresByType image/gif A604800
+#ExpiresByType image/png A604800
+#ExpiresByType image/jpeg A604800
+ExpiresByType text/plain A300
+ExpiresByType application/x-shockwave-flash A604800
+ExpiresByType video/x-flv A604800
+ExpiresByType application/pdf A604800
+ExpiresByType text/html A300
+</ifModule>
+
+<ifModule mod_headers.c>
+# YEAR
+<filesMatch "\.(ico|gif|jpg|jpeg|png|flv|pdf)$">
+  Header set Cache-Control "max-age=29030400"
+</filesMatch>
+# WEEK
+<filesMatch "\.(js|css|swf)$">
+  Header set Cache-Control "max-age=604800"
+</filesMatch>
+# 45 MIN
+<filesMatch "\.(html|htm|txt)$">
+  Header set Cache-Control "max-age=2700"
+</filesMatch>
+</ifModule>

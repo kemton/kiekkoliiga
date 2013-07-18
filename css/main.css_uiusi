@@ -1,0 +1,524 @@
+/* Kiekkoliiga.net styles */
+@font-face {
+	font-family: Bebas;
+	/*src:url( /css/BebasNeue.otf ) format("opentype");*/
+	
+	src:url('fonts/BebasNeue.eot');
+	src:url('fonts/BebasNeue.eot?#iefix') format('embedded-opentype'),
+		url('fonts/BebasNeue.woff') format('woff'),
+		url('fonts/BebasNeue.ttf') format('truetype'),
+		url('fonts/BebasNeue.svg#BebasNeueRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body { 
+	margin: 0; 
+	background: url(images/newbg.png) no-repeat center center fixed #67859b; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	height: 100%;
+	font-family: arial, helvetica; 
+	line-height: 16px; font-size: 12px;
+}
+
+table {max-width:520px!important;}
+
+a:link { color: #184161; text-decoration: none; }
+a:visited { text-decoration: none; color: #184161; }
+a:hover { text-decoration: none; color: #246090; }
+a:active { text-decoration: none; color: #246090; }
+
+#wrap {
+	width: 970px;
+	margin: 0 auto;
+	box-shadow:0 0 30px #515151;
+}
+
+#header {
+	width: 970px;
+	height: 114px;
+	background-image: url(images/header.png);
+}
+
+#top {
+	padding: 3px; padding-left: 5px; float: left; width: 550px;
+}
+
+#champion {
+	float: left; width: 180px; text-align: left; margin-top: 3px; margin-left: 10px;
+}
+#login {
+	float: right; width: 210px; text-align: right;
+}
+
+#menu {
+	width: 970px;
+	height: 35px;
+	text-align: left;
+	background-image: url(/images/menu.png);
+	border-bottom: 1px solid #3886dd;
+}
+
+#menu ul {
+	display: block;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	height: 35px;
+}
+#menu li {
+	float: left;
+	margin: 0;
+	padding: 0;
+	height: 35px;
+}
+#menu img {
+	height: 35px;
+}
+
+#menu .etusivu { padding-left: 21px; padding-right: 10px; }
+#menu .arkisto { padding-left: 11px; padding-right: 11px; }
+#menu .joukkueet { padding-left: 12px; padding-right: 11px; }
+#menu .saannot { padding-left: 12px; padding-right: 10px; }
+#menu .johtokunta { padding-left: 13px; padding-right: 9px; }
+#menu .paitsio { padding-left: 13px; padding-right: 13px; }
+#menu .tilastot { padding-left: 10px; padding-right: 10px; }
+#menu .foorumi { padding-left: 13px; padding-right: 12px; }
+#menu .kiekko_cup { padding-left: 12px; padding-right: 9px; }
+#menu .hall_of_fame { padding-left: 15px; padding-right: 15px; }
+
+#menu2 {
+width: 970px;
+height: 35px;
+text-align: left;
+background-image: url(images/menu2.png);
+}
+
+#menu2 ul {
+display: block;
+list-style-type: none;
+margin: 0;
+padding: 0;
+height: 35px;
+}
+#menu2 li {
+float: left;
+margin: 0;
+padding: 0;
+height: 35px;
+border-right: 1px solid rgb(27,81,122);
+}
+
+#menu2 a {
+color: #fff;
+font-family: "Bebas";
+font-size: 18px;
+padding: 10px;
+display: block;
+}
+
+#container {
+	float: left;
+	width: 970px;
+	background-image: url(images/container.png);
+	box-shadow:0 0 30px #515151;
+	z-index: -99;
+}
+
+#left {
+float: left;
+width: 210px;
+}
+
+#content {
+float: left;
+padding-left: 2px;
+padding-right: 2px;
+width: 532px;
+}
+
+#right {
+float: right;
+width: 224px;
+}
+
+#footer {
+clear: both;
+width: 970px;
+height: 40px;
+background-image: url(images/footer.png);
+clear: both;
+}
+
+#footer .content {
+padding: 11px;
+color: #fff;
+}
+
+.box {
+}
+
+.etu_sarja_otsake {
+height: 25px;
+background-image: url(images/box/top2.png);
+background-repeat: repeat-x;
+cursor:pointer;
+}
+
+.etu_sarja_otsake .padding {
+padding: 4px!important;
+}
+
+.box .top {
+height: 32px;
+/*background-image: url(images/top.png);*/
+background-image: url(images/menu2.png);
+background-repeat: repeat-x;
+color: white;
+}
+
+.box .padding {
+padding: 8px;
+}
+
+.box .content {
+padding: 6px;
+}
+
+.home_logo {
+	float: left;
+	padding-top: 13px;
+	padding-right: 10px;
+	padding-left: 5px;
+	padding-bottom: 0px;
+	font-family: arial, helvetica;
+	font-size: 6pt;
+	text-align: center;
+}
+
+.sarjataulukko {
+border-collapse:collapse;
+font-size: 11px;
+border-bottom: 1px solid #9ab0c1;
+}
+.noborder {
+border-bottom: 0px!important;
+}
+.team {
+border-top: 1px solid #c0c7cc;
+background-color: #d6e0e7;
+}
+.team2 {
+border-top: 1px solid #c0c7cc;
+background-color: #e0e8ee;
+}
+.team_green {
+border-top: 1px solid #9ec7a4;
+background-color: #b7e2bf;
+}
+.team_yellow {
+border-top: 1px solid #bbd072;
+background-color: #e2e1a1;
+}
+.team_red {
+border-top: 1px solid #e57d55;
+background-color: #ec8b8f;
+}
+.sarjataulukko .logo {
+margin-left: 13px;
+margin-top: 2px;
+}
+.sarjataulukko .joukkue {
+margin-left: 2px;
+margin-right: 2px;
+}
+.sarjataulukko .maaliero {
+margin-left: 2px;
+margin-right: 2px;
+}
+.sarjataulukko .ottelut {
+margin-left: 2px;
+margin-right: 2px;
+}
+.sarjataulukko .pisteet {
+margin-left: 2px;
+margin-right: 23px;
+}
+.green {
+color: #067C01;
+}
+.red {
+color: #950501;
+}
+.blue {
+color: #000795;
+}
+h4 {font-size: 10pt;}h5 {font-size: 9pt;}
+hr {border: dotted 1px #627787;width: 100%;}
+
+.rivi { background-color: #d6e0e7; border-top: 1px solid #c0c7cc; }
+.rivi2 { border-top: 1px solid #c0c7cc; }
+
+.odd { background-color: #d6e0e7; border-top: 1px solid #c0c7cc; }
+.even { border-top: 1px solid #c0c7cc; }
+
+table { border-spacing: 0; }
+
+td { padding: 2px; }
+
+.nopadding td { padding: 0; }
+.nopadding  { padding: 0; }
+
+.win { color: #7a8e34; }
+.draw { color: #888000; }
+.loss { color: red; }
+
+.taulukko th { padding: 2px; }
+.taulukko  { border-collapse: collapse!important; }
+ul.menu{
+margin:0;
+padding:0;
+text-decoration:none;
+list-style-type:none;
+width:100%;
+}
+
+ul.menu li{
+position:relative;
+width:100%;
+/*background-image:url('left_nav_head_bg.gif');*/
+background-repeat:repeat-x;	
+}
+
+.menu li ul{
+list-style-type:none;
+}
+.menu li li{
+background-image:none;
+padding:0;
+}
+.menu li { padding: 0; margin: 0; }
+.menu ul{ padding: 0; margin: 0; }
+
+ul#menu2{
+margin:0;
+padding:0;
+text-decoration:none;
+list-style-type:none;
+width:100%;
+}
+ul#menu2 li{
+position:relative;
+width:100%;
+background-repeat:repeat-x;	
+}
+
+#menu2 li ul{
+list-style-type:none;
+}
+#menu2 li li{
+background-image:none;
+padding:0;
+}
+#menu2 li { padding: 0; margin: 0; }
+#menu2 ul{ padding: 0; margin: 0; }
+
+.sarjataulukko { font-family: verdana; }
+
+ul.auroramenu li{
+position:relative;
+}
+
+.aurorahide{
+position:absolute;
+right:12px;
+top:6px;
+display:none;
+width:17px;
+height:17px;
+/*background-image:url('icons/aurora_minus_icon.gif');*/
+}
+.aurorashow{
+position:absolute;
+right:12px;
+top:6px;
+display:none;
+width:17px;
+height:17px;
+/*background-image:url('icons/aurora_plus_icon.gif');*/
+}
+
+.padding2 {
+padding: 4px;
+}
+
+.matchesborder {
+border-top: 1px solid #9ab0c1;
+}
+
+.sarjataulukko_title { height: 25px;
+/*background-image: url(images/top2.png);*/
+background-image: url(images/menu2.png);
+background-repeat: repeat-x;
+cursor:pointer; width: 100%; display:block; }
+
+.sarjataulukko_title_last { height: 24px;
+/*background-image: url(images/top2.png);*/
+background-image: url(images/menu2.png);
+background-repeat: repeat-x;
+cursor:pointer; width: 100%; display:block; }
+
+.matches {
+border-bottom: 1px solid #9ab0c1;
+}
+
+.borderbottom {
+border-bottom: 1px solid #9ab0c1;
+}
+.matches2 {
+border-top: 1px solid #9ab0c1;
+border-bottom: 1px solid #9ab0c1;
+}
+
+.vframe_title {
+	height: 32px;
+	/*background-image: url(images/top.accordion.png);*/
+	background-image: url(images/menu2.png);
+	background-repeat: repeat-x;
+	cursor:pointer; width: 100%; display:block;
+
+}
+.vframe_title .padding {
+	color: white;
+}
+.vframe_title .padding:hover {
+	color: lightgray;
+}
+.sarjataulukko_title .padding2 {
+	color: white;
+}
+.sarjataulukko_title .padding2:hover {
+	color: lightgray;
+}
+.vframe_title .first {
+	background-image: url(images/top.accordion.png);
+}
+.vframe_title .first .padding {
+	color: white;
+}
+.vframe_title .first .padding:hover {
+	color: lightgray;
+}
+
+
+img {
+margin: 0;
+padding: 0;
+border: 0;
+}
+
+textarea { width: 430px; background-color: #f4f6f9; border: 1px solid #abbecd; font-family: arial, helvetica; font-size: 12px; padding: 3px; }
+input { background-image: /*url(/images/input.png); background-repeat: repeat-x;*/ background-color: #f4f6f9; border: 1px solid #c3d0d5; font-family: arial, helvetica; font-size: 12px; padding: 2px; }
+input[type=submit]{
+/*background-color: #bacedd; border: 1px solid #a4bdd0; */margin-top: 4px; background-color: #FFFFFF; font-weight: bold; color: #54717d;
+}
+
+button.submit {
+	margin-top: 4px;
+	background-color: #FFFFFF;
+	font-weight: bold;
+	color: #54717d;
+}
+
+.nostats { color: #7b8186; }
+
+h4 { font-size: 115% }
+
+th { text-align: left; }
+
+
+#login a:link { color: #fff; text-decoration: none; }
+#login a:visited { text-decoration: none; color: #fff; }
+#login a:hover { text-decoration: none; color: #e6e6e6; }
+#login a:active { text-decoration: none; color: #e6e6e6; }
+
+#login .inputu { background-image: url(/images/login_inputu.png); width: 144px; height: 27px; margin: 0; padding: 0; border: 0; padding-left: 25px; }
+#login .inputp { background-image: url(/images/login_inputp.png); width: 144px; height: 27px; margin: 0; padding: 0; border: 0; padding-left: 25px; }
+
+#login .submit { background-image: url(/images/login.png); width: 58px; height: 25px; border:0; padding: 0; margin: 0; }
+
+
+#logged { font-size: 12px; width: 194px; height: 109px; background-image: url(/images/logged_bg.png); text-align: left; margin: 2px; }
+
+#logged a:link { color: #184161; text-decoration: none; }
+#logged a:visited { text-decoration: none; color: #184161; }
+#logged a:hover { text-decoration: none; color: #246090; }
+#logged a:active { text-decoration: none; color: #246090; }
+
+.icon { margin: 1px; }
+
+
+.floatLeft { float: left; }
+.floatRight { float: right; }
+
+
+.padding1 { padding: 1px; }
+.padding10{ padding: 10px; }
+.padding12 { padding: 12px; }
+.padding13 { padding: 13px; }
+
+.all { width: 100%; }
+
+.cellpadding_cellspacing {
+	border-spacing:0;
+	border-collapse:collapse;
+}
+
+.width26 { width: 26px; }
+
+.register_forgot { font-size: 11px; line-height: 13px; }
+
+.sarjataulukko .head { height: 22px; }
+
+.white { color: #fff; }a.white { color: #fff; }
+
+.ad { padding: 2px; padding-top: 4px; }
+
+.noborderbottom { border-bottom: 0!important; }
+
+h1.first, h2.first, h3.first, h4.first { padding-top: 0; margin-top: 0; }
+
+blockquote {
+	width: 220px;
+	margin:5px 20px 5px 20px;
+	float: right;
+}
+
+blockquote:before {
+	content: "\201D";
+	font-size: 700%;
+	position: absolute;
+	margin-top: 30px;
+}
+
+#right-quote p {
+	font-size: 125%;
+	margin-left: 20px;
+}
+
+
+.jeah{ border-collapse: collapse!important; }
+.st{ border-collapse: collapse!important; }
+
+table.statistics tr.odd { background-color: #d6e0e7; border-top: 1px solid #b1c0ca; }
+table.statistics tr.even{ border-top: 1px solid #b1c0ca; }
+
+table.statistics th { background-color: #ced8df; text-align: center; padding: 2px; }
+table.statistics { border: 1px solid #b1c0ca; border-collapse: collapse!important; }
+
+.left { text-align: left!important; }
+.center { text-align: center!important; }
+.right { text-align: right!important; }
