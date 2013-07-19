@@ -1,6 +1,6 @@
 <?php
 /**
- * Kiekkoliiga Controller
+ * Kiekkoliiga Router
  * @author nikokiuru
  *
  */
@@ -45,7 +45,9 @@ class Router {
 		"leagueStatsPage" => "leaguestats.php",
 		"achievementsPage" => "achievements.php",
 		"unityPage" => "unity.php",
-		"kiekkotkStatsPage" => "kiekkotk_stats.php"
+		"kiekkotkStatsPage" => "kiekkotk_stats.php",
+		"uploadPage" => "upload.php",
+		"uploadMatchPage" => "upload_match.php"
 		);
 
 		// All controllers
@@ -68,7 +70,8 @@ class Router {
 		"PageController" => PageController,
 		"rules" => PageController,
 		"hall-of-fame" => PageController,
-		"unity" => UnityController
+		"unity" => UnityController,
+		"upload" => UploadMatchController
 		);
 	}
 

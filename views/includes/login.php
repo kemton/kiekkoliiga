@@ -57,12 +57,12 @@ if(!isset($_SESSION["user"]))
 			if ($player->__get('isAdmin')) { echo '<a href="">Joukkuetietojen päivitys</a><br />'; }
 		} else { echo '<strong>'.$user->__get('name').'</strong><br />'; }
 		
-		if ($user->__get('isReferee')) { echo '<a href="">Pelin lisääminen</a><br />'; }
+		if ($user->__get('isReferee')) { echo '<a href="/upload">Pelin lisääminen</a><br />'; }
 		echo '<a href="/page/forum/index.php?action=logout;' . $context['session_var'] . '=' . $context['session_id'] . '">Kirjaudu ulos</a>';
 		
 		if($player <> NULL){ // user has player profile?
 			if ($player->__get('isAdmin')) {
-				echo '<div style="float: right;"><a href="/hallinta/">Hallinta</a></div>';
+				echo '<div style="float: right;"><a href="/admin">Hallinta</a></div>';
 			}
 		}
 		

@@ -24,8 +24,8 @@ class StatisticsController extends Controller {
 		return $return;
 	}
 
-	private function sarjataulukko($model) {
-		$id = $model[2];
+	private function sarjataulukko($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["standings"] = $stats->getStandingsById($id);
@@ -35,8 +35,8 @@ class StatisticsController extends Controller {
 		return "standingsPage";
 	}
 	
-	private function pisteporssi($model) {
-		$id = $model[2];
+	private function pisteporssi($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["scoreboard"] = $stats->getScoreboardById($id);
@@ -46,8 +46,8 @@ class StatisticsController extends Controller {
 		return "scoreboardPage";
 	}
 	
-	private function ottelut($model) {
-		$id = $model[2];
+	private function ottelut($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["matches"] = $stats->getMatchesById($id);
@@ -57,8 +57,8 @@ class StatisticsController extends Controller {
 		return "matchesPage";
 	}
 	
-	private function ottelu($model) {
-		$id = $model[2];
+	private function ottelu($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["match"] = $stats->getMatchById($id);
@@ -68,8 +68,8 @@ class StatisticsController extends Controller {
 		return "matchPage";
 	}
 	
-	private function attack($model) {
-		$id = $model[2];
+	private function attack($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["attackStats"] = $stats->getAttackStatsById($id);
@@ -79,8 +79,8 @@ class StatisticsController extends Controller {
 		return "attackPage";
 	}
 	
-	private function defence($model) {
-		$id = $model[2];
+	private function defence($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["defenceStats"] = $stats->getDefenceStatsById($id);
@@ -90,8 +90,8 @@ class StatisticsController extends Controller {
 		return "defencePage";
 	}
 	
-	private function yhdistetty($model) {
-		$id = $model[2];
+	private function yhdistetty($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["conferenceStanding"] = $stats->getStandingsById($id);
@@ -102,8 +102,8 @@ class StatisticsController extends Controller {
 		return "conferencePage";
 	}
 	
-	private function pudotuspelit($model) {
-		$id = $model[2];
+	private function pudotuspelit($request) {
+		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
 			$_REQUEST["playoffsStanding"] = $stats->getPlayoffsStanding($id);
@@ -113,7 +113,7 @@ class StatisticsController extends Controller {
 		return "playoffsPage";
 	}
 	
-	public function leaguestats($request) {
+	private function leaguestats($request) {
 		try {
 			$leagueStatsAccess = new LeagueStatsAccess();
 			$_REQUEST["leagueStats"] = $leagueStatsAccess->getLeagueStats();
@@ -123,7 +123,7 @@ class StatisticsController extends Controller {
 		return "leagueStatsPage";
 	}
 	
-	public function searchplayer($request) {
+	private function searchplayer($request) {
 		$key = $request[2];
 		try {
 			$playerAccess = new PlayerAccess();
@@ -134,7 +134,7 @@ class StatisticsController extends Controller {
 		return "searchPlayerPage";
 	}
 	
-	public function searchteam($request) {
+	private function searchteam($request) {
 		$key = $request[2];
 		try {
 			$teamAccess = new TeamAccess();
