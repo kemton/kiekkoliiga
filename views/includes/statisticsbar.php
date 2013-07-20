@@ -18,6 +18,7 @@
 	$leagues = unserialize($_REQUEST["leagues"]);
 	
 	foreach ($leagues as $value) {
+		$value = unserialize($value);
 		echo "<strong>{$value->__get('name')}</strong><br />\n";
 		
 		foreach ($value->__get('steers') as $steerValue) {

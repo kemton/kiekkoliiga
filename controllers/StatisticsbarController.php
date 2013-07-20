@@ -5,8 +5,8 @@ class StatisticsbarController extends Controller {
 		try {
 			$season = unserialize($_SESSION["season"]);
 			/* statisticbar */
-			$statsAccess = new StatisticsAccess();
-			$leagues = $statsAccess->getAllLeaguesStatsBySeasonId($season->__get('id'));
+			$leagueAccess = new LeagueAccess();
+			$leagues = $leagueAccess->getAllLeaguesBySeasonId($season->__get('id'));
 			$_REQUEST["leagues"] = $leagues;
 
 			$seasonAccess = new SeasonAccess();

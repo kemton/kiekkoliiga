@@ -10,7 +10,13 @@ include_once (incDir."/rightbar.php");
 			<div class="padding">Lisää</div>
 		</div>
 		<div class="content">
-			Uppaa
+			<?php
+			$uploads = unserialize($_REQUEST["uploads"]);
+			print_r($uplads);
+			foreach ($uploads as $upload) {
+				echo $upload->__get('header')."<br />";
+			}
+			?>
 		</div>
 	</div>
 <?php include_once (incDir."/footer.php"); ?>

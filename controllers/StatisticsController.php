@@ -115,7 +115,7 @@ class StatisticsController extends Controller {
 	
 	private function leaguestats($request) {
 		try {
-			$leagueStatsAccess = new LeagueStatsAccess();
+			$leagueStatsAccess = new LeagueAccess();
 			$_REQUEST["leagueStats"] = $leagueStatsAccess->getLeagueStats();
 		} catch (Exception $e) {
 			throw $e;

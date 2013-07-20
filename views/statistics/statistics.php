@@ -16,15 +16,16 @@ include_once (incDir."/statisticsbar.php");
 			
 			$league = unserialize($_REQUEST["leagues"]);
 			foreach ($league as $key) {
+				$key = unserialize($key);
 				echo $key->__get('name');
 				foreach ($key->__get('steers') as $k) {
 					echo $k->__get('leagueSteerId');
 				}
 			}
 			
-			echo "<pre>";
-			print_r($league);
-			echo "</pre>";
+			//echo "<pre>";
+			//print_r($league);
+			//echo "</pre>";
 			?>
 		</div>
 	</div>

@@ -38,11 +38,6 @@ class StatisticsAccess extends DatabaseAccess {
 										LEFT JOIN sarjatilasto ON sarjatilasto.sarjatilastoID = rstilasto.sarjatilastoID
 										LEFT JOIN sarja ON sarja.sarjaID = sarjatilasto.sarjaID WHERE sarja.sarjataso = '2. divari' AND sarja.kausiID =
 										(SELECT kausiID FROM kausi ORDER BY kausiID DESC LIMIT 1) ORDER BY voitot*2+tasapelit DESC, tehdyt-paastetyt DESC, tehdyt DESC";*/
-	private $GET_ALL_LEAGUES_STATS_BY_SEASONID = "SELECT sarja.sarjaID, kausi.kausiID, kausi.kausi, sarja.sarjataso, sarja.nimi AS sarjaNimi, sarja.lohkot, sarjatilasto.sarjatilastoID, sarjatilasto.tyyppi, sarjatilasto.nimi AS sarjatasoNimi
-										FROM sarja
-										LEFT JOIN sarjatilasto ON sarjatilasto.sarjaID = sarja.sarjaID
-										LEFT JOIN kausi ON kausi.kausiID = sarja.kausiID
-										WHERE sarja.kausiID = :seasonid AND sarja.sarjataso <> 'cup'";
 	private $GET_ALL_CUP_TEAM_STANDINGS_BY_SEASONID = "SELECT sarja.sarjaID, kausi.kausiID, kausi.kausi, sarja.sarjataso, sarja.nimi AS sarjaNimi, sarja.lohkot, sarjatilasto.sarjatilastoID, sarjatilasto.tyyppi, sarjatilasto.nimi AS sarjatasoNimi
 										FROM sarja
 										LEFT JOIN sarjatilasto ON sarjatilasto.sarjaID = sarja.sarjaID
@@ -248,39 +243,6 @@ class StatisticsAccess extends DatabaseAccess {
 			throw $e;
 		}
 		return $result;
-	}
-	
-	public function getAllLeaguesStatsBySeasonId($seasonId) {
-		try {
-			$seasonAccess = new SeasonAccess();
-			$season = $seasonAccess->getSeasonById($seasonId);
-			$leaguesResult = parent::executeStatement($this->GET_ALL_LEAGUES_STATS_BY_SEASONID, array("seasonid" => $seasonId));
-			$leagues = array();
-			$i = -1;
-			foreach ($leaguesResult as $value) {
-				if ($leagueId <> $value["sarjaID"]) {
-					$leagueId = $value["sarjaID"];
-					$standing = $value["sarjataso"];
-					
-					$i++;
-					$leagues[$i] = new League;
-					$leagues[$i]->__set('id', $value["sarjaID"]);
-					$leagues[$i]->__set('leagueLevel', $value["sarjataso"]);
-					$leagues[$i]->__set('name', $value["sarjaNimi"]);
-					$leagues[$i]->__set('season', $season);
-					$leagues[$i]->__set('conference', $value["lohkot"]);
-				}
-				
-				$leagueSteer = new LeagueSteer;
-				$leagueSteer->__set('leagueSteerId', $value["sarjatilastoID"]);
-				$leagueSteer->__set('leagueSteerName', $value["sarjatasoNimi"]);
-				$leagueSteer->__set('leagueSteerType', $value["tyyppi"]);
-				$leagues[$i]->setSteer($leagueSteer);
-			}
-		} catch (Exception $e) {
-			throw $e;
-		}
-		return serialize($leagues);
 	}
 
 	public function getCurrentStandingsList() {

@@ -71,7 +71,7 @@ class Router {
 		"rules" => PageController,
 		"hall-of-fame" => PageController,
 		"unity" => UnityController,
-		"upload" => UploadMatchController
+		"upload" => UploadController
 		);
 	}
 
