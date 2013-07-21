@@ -1,6 +1,6 @@
 <?php
 abstract class UploadMatch {
-	protected $uploadId;
+	protected $id;
 	protected $header;
 	protected $standingId;
 	protected $matchId;
@@ -9,8 +9,8 @@ abstract class UploadMatch {
 	protected $name;
 	protected $teams = array();
 	
-	function __construct($uploadId, $header, $standingId, $type, $name) {
-		$this->__set("uploadId", $uploadId);
+	function __construct($id, $header, $standingId, $matchId, $scoreboardId, $type, $name) {
+		$this->__set("id", $id);
 		$this->__set("header", $header);
 		$this->__set("standingId", $standingId);
 		$this->__set("matchId", $matchId);

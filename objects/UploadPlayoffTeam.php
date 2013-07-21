@@ -1,9 +1,11 @@
 <?php
 class UploadPlayoffTeam {
+	private $id;
 	private $team1;
 	private $team2;
 	
-	function __construct($teams1, $teams2) {
+	function __construct($id, $teams1, $teams2) {
+		$this->__set("id", $id);
 		$this->__set("team1", $team1);
 		$this->__set("team2", $team2);
 	}

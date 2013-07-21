@@ -35,7 +35,7 @@ class UploadController extends Controller {
 		return "uploadPage";
 	}
 	
-	private function match($requeset) {
+	private function match($request) {
 		$leagueId = $request["2"];
 		$homeTeamId = $request["3"];
 		$visitorTeamId = $request["4"];
@@ -49,7 +49,22 @@ class UploadController extends Controller {
 		return "uploadMatchPage";
 	}
 	
-	private function addmatch($requeset) {
+	private function playoffmatch($request) {
+		//$uploadId = $request["2"];
+		//$pairId = $request["3"];
+		$uploadId = $_GET["uid"];
+		$pairId = $_GET["pid"];
+		try {
+			$uploadAccess = new UploadAccess();
+			// get teams name and players, and check is valid match (still initialize)
+			$_REQUEST["uploadMatch"] = $uploadAccess->initPlayoffMatchUpload($uploadId, $pairId);
+		} catch (Exception $e) {
+			throw $e;
+		}
+		return "uploadMatchPage";
+	}
+	
+	private function addmatch($request) {
 		$leagueId = $request["2"];
 		try {
 			$match = new Match();

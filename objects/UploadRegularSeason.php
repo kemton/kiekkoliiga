@@ -1,8 +1,8 @@
 <?php
 class UploadRegularSeason extends UploadMatch {
 	
-	function __construct($uploadId, $header, $standingId, $type, $name) {
-		parent::__construct($uploadId, $header, $standingId, $type, $name);
+	function __construct($uploadId, $header, $standingId, $matchId, $scoreboardId, $type, $name) {
+		parent::__construct($uploadId, $header, $standingId, $matchId, $scoreboardId, $type, $name);
 	}
 	
 	public function __set($name, $value) {
