@@ -2,7 +2,7 @@
 class LeagueAccess extends DatabaseAccess {
 	private $GET_ALL_LEAGUES_BY_SEASONID = "SELECT DISTINCT(sarja.sarjaID), sarja.kausiID FROM sarja
 										LEFT JOIN sarjatilasto ON sarjatilasto.sarjaID = sarja.sarjaID
-										WHERE sarja.kausiID = 30 AND sarja.sarjataso <> 'cup'";
+										WHERE sarja.kausiID = :seasonid AND sarja.sarjataso <> 'cup'";
 	private $GET_LEAGUES_DATA_BY_LEAGUEID = "SELECT sarja.sarjaID, kausi.kausiID, kausi.kausi, sarja.sarjataso, sarja.nimi AS sarjaNimi, sarja.lohkot, sarjatilasto.sarjatilastoID, sarjatilasto.tyyppi, sarjatilasto.nimi AS sarjatasoNimi
 										FROM sarja
 										LEFT JOIN sarjatilasto ON sarjatilasto.sarjaID = sarja.sarjaID
@@ -16,6 +16,22 @@ class LeagueAccess extends DatabaseAccess {
 	
 	public function __construct() {
 		parent::__construct();
+	}
+	
+	public function isRegularSeason($leagueType) {
+		if ($leagueType == 'ottelut' || $leagueType == 'yhdistetty') {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	public function isPlayoffLeague($leagueType) {
+		if ($leagueType == 'pudotuspelit' || $leagueType == 'cup' || $leagueType == 'cup2') {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 	
 	public function getAllLeaguesBySeasonId($seasonId) {
@@ -32,6 +48,7 @@ class LeagueAccess extends DatabaseAccess {
 		return serialize($leagues);
 	}
 	
+	// getLeagueBy sarja.sarjaID
 	public function getLeagueByLeagueId($leagueId) {
 		try {
 			$seasonAccess = new SeasonAccess();

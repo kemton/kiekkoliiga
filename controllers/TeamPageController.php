@@ -22,7 +22,7 @@ class TeamPageController extends Controller {
 			}
 			
 			$team = $teamAccess->getTeamById($id);
-			$teamSeasons = $teamAccess->getTeamSeasonLeaguesById($id, $seasonId);
+			$teamSeasons = $teamAccess->getTeamSeasonLeaguesWithTypesById($id, $seasonId);
 			$teamPressReleases = $teamAccess->getTeamPressReleasesById($id);
 			
 			$_REQUEST["team"] = $team;

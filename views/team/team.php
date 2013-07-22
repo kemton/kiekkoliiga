@@ -150,11 +150,40 @@ echo "<a class=\"" . $a[2] . "\" href=\"/tilastot/?tilasto=lehdisto&id=$id&kausi
 <div id="tabs">
 	<ul>
 	<li><a href="#tabs-1">Kausitilastot</a></li>
-	<li><a href="#tabs-2">historia</a></li>
+	<li><a href="#tabs-2">Historia</a></li>
 	<li><a href="#tabs-3">Lehdistötiedotteet</a></li>
 	</ul>
 	<div id="tabs-1">
+		<?php
 		
+		$teamSeasons = $_REQUEST["teamSeasons"];
+		foreach($teamSeasons as $row){
+			global $mbcwf;
+			$mbcwf = 0;
+			
+			$tyyppi = $row["tyyppi"];
+			$tilastoID = $row["sarjatilastoID"];
+			$tulostus = $row["nimi"];
+			
+			if ($tyyppi == 'pudotuspelit'){
+				echo "<h5>$tulostus / ottelut:</h5>";
+				//tulostaOttelut($id, $nimi, $tilastoID, 'pp', $kausi, $sortby, $tulostus);
+			}
+			else if ($tyyppi == 'ottelut' || $tyyppi == 'yhdistetty'){
+				echo "<h5>$tulostus / ottelut:</h5>";
+				//tulostaOttelut($id, $nimi, $tilastoID, 'rs', $kausi, $sortby, $tulostus);
+			}
+			else if ($tyyppi == 'pisteporssi'){
+				echo "<h5>$tulostus / tilastot:</h5>";
+				//tulostaPorssi($id, $tilastoID, $kausi);
+			}
+			else if ($tyyppi == 'cup'){
+				echo "<h5>$tulostus / ottelut:</h5>";
+				//tulostaOttelut($id, $tilastoID, $kausi);
+			}
+		}
+		
+		?>
 	</div>
 	<div id="tabs-2">
 		
@@ -169,16 +198,15 @@ echo "<a class=\"" . $a[2] . "\" href=\"/tilastot/?tilasto=lehdisto&id=$id&kausi
 			
 			foreach($pressReleases as $pressRelease){
 				$pressRelease = unserialize($pressRelease);
-				print_r($pressRelease);
 				$id = $pressRelease->__get("id");
-				$timestamp = $pressRelase->__get("time");
+				$timestamp = $pressRelease->__get("time");
 				$header = str_replace(" ", "&nbsp;", $pressRelease->__get("header"));
 				$text = $pressRelease->__get("text");
 				
 				echo "<tr><td width=\"85\">{$timestamp}</td>";
-				echo "<td>TÄHÄN Javascript-aukaisu<a href=\"/board-info/{$id}\">{$header}</a></td></tr>";
+				echo "<td><a href=\"/board-info/{$id}\">{$header}</a></td></tr>";
 				
-				echo "<tr><td></td><td>" . nl2br($text) . "</td></tr>";
+				echo "<tr><td></td><td style=\"display: none;\">" . nl2br($text) . "</td></tr>";
 			}
 
 			echo "</table>";
@@ -187,44 +215,27 @@ echo "<a class=\"" . $a[2] . "\" href=\"/tilastot/?tilasto=lehdisto&id=$id&kausi
 </div>
 			
 <?php
-			
-			
-			
-			print_r($_REQUEST["teamSeasons"]);
-			$haku = sql ("SELECT sarjatilasto.sarjatilastoID, sarjatilasto.tyyppi, sarja.nimi
-              FROM joukkuesivu, sarjatilasto, sarja
-              WHERE joukkueID = $id
-              AND joukkuesivu.sarjatilastoID = sarjatilasto.sarjatilastoID
-              AND sarjatilasto.sarjaID = sarja.sarjaID
-              AND kausiID = $kausi
-              AND primaari = 1
-              ORDER BY sarjatilasto.sarjaID DESC, sarjatilasto.tyyppi");
 
-while ($rivi = mysql_fetch_assoc($haku)){
-	global $mbcwf;
-	$mbcwf = 0;
-	
-	$tyyppi = $rivi["tyyppi"];
-	$tilastoID = $rivi["sarjatilastoID"];
-	$tulostus = $rivi["nimi"];
-	
-	if ($tyyppi == 'pudotuspelit'){
-		echo "<h5>$tulostus / ottelut:</h5>";
-		tulostaOttelut($id, $nimi, $tilastoID, 'pp', $kausi, $sortby, $tulostus);
-	}
-	else if ($tyyppi == 'ottelut' || $tyyppi == 'yhdistetty'){
-		echo "<h5>$tulostus / ottelut:</h5>";
-		tulostaOttelut($id, $nimi, $tilastoID, 'rs', $kausi, $sortby, $tulostus);
-	}
-	else if ($tyyppi == 'pisteporssi'){
-		echo "<h5>$tulostus / tilastot:</h5>";
-		tulostaPorssi($id, $tilastoID, $kausi);
-	}
-  else if ($tyyppi == 'cup'){
-		echo "<h5>$tulostus / ottelut:</h5>";
-		tulostaOttelut($id, $tilastoID, $kausi);
-	}
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function tulostaPorssi($joukkueID, $stID, $kau){
 	$t_optiot = array("", "", " align=\"center\"", " align=\"center\"", " align=\"center\"", " align=\"center\"", " align=\"center\""," align=\"center\"");

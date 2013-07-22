@@ -35,6 +35,14 @@ class TeamAccess extends DatabaseAccess {
 							WHERE joukkue.nimi = :teamName
 							AND sarja.kausiID = :season
 							GROUP BY sarjatilasto.sarjaID";
+	private $GET_SEASON_LEAGUES_WITH_TYPES_BY_ID = "SELECT sarjatilasto.sarjatilastoID, sarjatilasto.tyyppi, sarja.nimi
+              FROM joukkuesivu, sarjatilasto, sarja
+              WHERE joukkueID = :teamId
+              AND joukkuesivu.sarjatilastoID = sarjatilasto.sarjatilastoID
+              AND sarjatilasto.sarjaID = sarja.sarjaID
+              AND kausiID = :seasonId
+              AND primaari = 1
+              ORDER BY sarjatilasto.sarjaID DESC, sarjatilasto.tyyppi";
 	private $GET_PRESS_RELEASES_BY_TEAM_ID = "SELECT tiedoteID
 	             FROM lehdistotiedotteet
                WHERE lehdistotiedotteet.joukkueID = :teamId
@@ -96,9 +104,18 @@ class TeamAccess extends DatabaseAccess {
 		return $key;
 	}
 	
-	public function getTeamSeasonLeaguesById($teamid, $seasonId) {
+	public function getTeamSeasonLeaguesById($teamId, $seasonId) {
 		try {
-			$key = parent::executeStatement($this->GET_SEASON_LEAGUES_BY_ID, array("teamid" => $teamid, "season" => $seasonId));
+			$key = parent::executeStatement($this->GET_SEASON_LEAGUES_BY_ID, array("teamid" => $teamId, "season" => $seasonId));
+		} catch (Exception $e) {
+			throw $e;
+		}
+		return $key;
+	}
+	
+	public function getTeamSeasonLeaguesWithTypesById($teamId, $seasonId) {
+		try {
+			$key = parent::executeStatement($this->GET_SEASON_LEAGUES_WITH_TYPES_BY_ID, array("teamId" => $teamId, "seasonId" => $seasonId));
 		} catch (Exception $e) {
 			throw $e;
 		}

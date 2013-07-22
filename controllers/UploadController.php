@@ -4,6 +4,8 @@ class UploadController extends Controller {
 	public function execute($request) {
 		$return = "uploadPage";
 		try {
+			$user = unserialize($_SESSION["user"]);
+			if (!$user->__get('isReferee')) { throw new Exception('You do not have permission. Take contact to board.');}
 			$leftbar = new LeftbarController();
 			$leftbar->execute($request);
 			$rightbar = new RightbarController();
@@ -42,7 +44,7 @@ class UploadController extends Controller {
 		try {
 			$uploadAccess = new UploadAccess();
 			// get teams name and players, and check is valid match (still initialize)
-			$_REQUEST["uploadMatch"] = $uploadAccess->initMatchUpload($leagueId, $homeTeamId, $visitorTeamId);
+			$_REQUEST["uploadMatch"] = $uploadAccess->initRegularSeasonMatchUpload($leagueId, $homeTeamId, $visitorTeamId);
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -70,18 +72,18 @@ class UploadController extends Controller {
 			$match = new Match();
 			$match->__set('league', $_POST["league"]);
 			$match->__set('stage', $_POST["league"]);
-			$match->__set('homeTeam', $_POST["league"]);
-			$match->__set('visitorTeam', $_POST["league"]);
-			$match->__set('homeTeamGoals', $_POST["league"]);
-			$match->__set('visitorTeamGoals', $_POST["league"]);
-			$match->__set('homeTeamMatchPlayers', $_POST["league"]);
-			$match->__set('visitorTeamMatchPlayers', $_POST["league"]);
-			$match->__set('date', $_POST["league"]);
-			$match->__set('time', $_POST["league"]);
-			$match->__set('referee', $_POST["league"]);
-			$match->__set('walkover', $_POST["league"]);
-			$match->__set('overtime', $_POST["league"]);
-			$match->__set('periodStats', $_POST["league"]);
+			$match->__set('homeTeam', $_POST["homeTeamId"]);
+			$match->__set('visitorTeam', $_POST["visitorTeamId"]);
+			$match->__set('homeTeamGoals', $_POST["homeTeamGoals"]);
+			$match->__set('visitorTeamGoals', $_POST["visitorTeamGoals"]);
+			$match->__set('homeTeamMatchPlayers');
+			$match->__set('visitorTeamMatchPlayers');
+			$match->__set('date');
+			$match->__set('time');
+			$match->__set('referee', $_POST["referee"]);
+			$match->__set('walkover', FALSE);
+			$match->__set('overtime', $_POST["overtime"]);
+			$match->__set('periodStats');
 			
 			$uploadAccess = new UploadAccess();
 			$uploadAccess->addMatch($match);

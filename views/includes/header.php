@@ -30,6 +30,10 @@ include("functionInclude.php");
 				handles: "se"
 			});
 		});
+		
+		$(function() {
+			$( "#tabs" ).tabs();
+		});
 	</script>
 	
 	<meta property="og:site_name" content="Kiekkoliiga.net"/>

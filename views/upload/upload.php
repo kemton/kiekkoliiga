@@ -27,7 +27,7 @@ include_once (incDir."/rightbar.php");
 					<button type=\"submit\">Jatka</button>
 					</form>";
 				} elseif ($type == 'pudotuspelit' || $type == 'cup' || $type == 'cup2') { // Playoff & cup
-					echo "<form action=\"/upload/playoffmatch\" method=\"get\">
+					echo "<form action=\"/upload/playoffmatch/\" method=\"get\">
 					<select name=\"pid\">";
 					foreach (unserialize($upload->__get('teams')) as $team) {
 						$team1 = unserialize($team->__get('team1'));

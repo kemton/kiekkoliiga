@@ -1,23 +1,23 @@
 <?php
 class Match {
 	
-	private $id;
-	private $league;
-	private $stage;
-	private $homeTeam;
-	private $visitorTeam;
-	private $homeTeamGoals;
-	private $visitorTeamGoals;
-	private $homeTeamMatchPlayers;
-	private $visitorTeamMatchPlayers;
-	private $date;
-	private $time;
-	private $hasReport;
-	private $comments;
-	private $referee;
-	private $walkover;
-	private $overtime;
-	private $periodStats;
+	protected $id;
+	protected $league;
+	protected $stage;
+	protected $homeTeam;
+	protected $visitorTeam;
+	protected $homeTeamGoals;
+	protected $visitorTeamGoals;
+	protected $homeTeamMatchPlayers;
+	protected $visitorTeamMatchPlayers;
+	protected $date;
+	protected $time;
+	protected $hasReport;
+	protected $comments;
+	protected $referee;
+	protected $walkover;
+	protected $overtime;
+	protected $periodStats;
 	
 	
 	function __construct ($id, $league, $stage, $homeTeam, $visitorTeam, $homeTeamGoals, $visitorTeamGoals, $homeTeamMatchPlayers, $visitorTeamMatchPlayers, $date, $time, $report, $comments, $referee, $walkover, $overtime, $periodStats) {
