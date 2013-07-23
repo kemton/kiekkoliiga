@@ -3,6 +3,7 @@ class TeamPageController extends Controller {
 	
 	public function execute($request) {
 		try {
+		
 			$leftbar = new LeftbarController();
 			$leftbar->execute($request);
 			$rightbar = new StatisticsbarController();
