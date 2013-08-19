@@ -18,7 +18,7 @@ class SeasonAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($season);
+		return $season;
 	}
 	
 	public function getLatestSeason() {
@@ -31,7 +31,7 @@ class SeasonAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($season);
+		return $season;
 	}
 	
 	public function getAllSeasons() {
@@ -49,7 +49,7 @@ class SeasonAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($seasons);
+		return $seasons;
 	}
 }
 ?>

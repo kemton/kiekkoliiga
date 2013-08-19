@@ -14,10 +14,10 @@ include_once (incDir."/statisticsbar.php");
 /**** Achievements ****/
 
 $achievements = unserialize($_REQUEST["playerAchievements"]);
-if ($achievements <> NULL) {
+if (unserialize($_REQUEST["playerAchievements"]) <> NULL) {
 	echo "<h4>Saavutukset:</h4>";
 	foreach ($achievements as $ach) {
-		$season = unserialize($ach->__get('season'));
+		$season = $ach->__get('season');
 		echo "{$season->__get('name')} - {$ach->__get('name')} joukkueessa {$ach->__get('team')}<br />";
 	}
 }

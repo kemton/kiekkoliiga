@@ -21,7 +21,7 @@ class PeriodStatsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($periodStats);
+		return $periodStats;
 	}
 
 }

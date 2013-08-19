@@ -7,22 +7,19 @@ class LeftbarController extends Controller {
 			$informationAccess = new InformationAccess();
 			
 			$board = $informationAccess->getLastBoardInfo();
-			$_REQUEST["lastBoardInfo"] = $board;
+			$_REQUEST["lastBoardInfo"] = serialize($board);
 			
 			$paitsio = $informationAccess->getLastPaitsio();
-			$_REQUEST["lastPaitsio"] = $paitsio;
+			$_REQUEST["lastPaitsio"] = serialize($paitsio);
 			
 			$lastComment = $informationAccess->getLastCommented();
-			$_REQUEST["lastComment"] = $lastComment;
+			$_REQUEST["lastComment"] = serialize($lastComment);
 			
 			$news = $informationAccess->getLastNews();
-			$_REQUEST["lastNews"] = $news;
-			
-			$teamNews = $informationAccess->getLastTeamNews();
-			$_REQUEST["lastTeamnews"] = $teamNews;
+			$_REQUEST["lastNews"] = serialize($news);
 			
 			$LFT = $informationAccess->getLastLookingForTeam();
-			$_REQUEST["lastLfg"] = $LFT;
+			$_REQUEST["lastLfg"] = serialize($LFT);
 			/* /leftbar */
 			
 			$return = "leftbarPage";

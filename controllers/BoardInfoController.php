@@ -10,7 +10,7 @@ class BoardInfoController extends Controller {
 			
 			if ($id != null && is_numeric($id)) {
 				$oneBoardInfo = $boardinfo->getBoardInfoById($id);
-				$_REQUEST["boardInfo"] = $oneBoardInfo;
+				$_REQUEST["boardInfo"] = serialize($oneBoardInfo);
 				
 				// Update read count
 				if($_SESSION["read"] <> "paitsio#".$id) {
@@ -19,7 +19,7 @@ class BoardInfoController extends Controller {
 				}
 			} else {
 				$allBoardInfos = $boardinfo->getAllBoardInfos();
-				$_REQUEST["allBoardInfos"] = $allBoardInfos;
+				$_REQUEST["allBoardInfos"] = serialize($allBoardInfos);
 			}
 			
 			$return = "boardInfoPage";

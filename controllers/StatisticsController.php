@@ -28,7 +28,7 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["standings"] = $stats->getStandingsById($id);
+			$_REQUEST["standings"] = serialize($stats->getStandingsById($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -39,7 +39,7 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["scoreboard"] = $stats->getScoreboardById($id);
+			$_REQUEST["scoreboard"] = serialize($stats->getScoreboardById($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -50,7 +50,7 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["matches"] = $stats->getMatchesById($id);
+			$_REQUEST["matches"] = serialize($stats->getMatchesById($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -61,7 +61,7 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["match"] = $stats->getMatchById($id);
+			$_REQUEST["match"] = serialize($stats->getMatchById($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -72,7 +72,7 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["attackStats"] = $stats->getAttackStatsById($id);
+			$_REQUEST["attackStats"] = serialize($stats->getAttackStatsById($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -83,7 +83,7 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["defenceStats"] = $stats->getDefenceStatsById($id);
+			$_REQUEST["defenceStats"] = serialize($stats->getDefenceStatsById($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -94,8 +94,8 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["conferenceStanding"] = $stats->getStandingsById($id);
-			$_REQUEST["conferenceMatches"] = $stats->getMatchesById($id);
+			$_REQUEST["conferenceStanding"] = serialize($stats->getStandingsById($id));
+			$_REQUEST["conferenceMatches"] = serialize($stats->getMatchesById($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -106,7 +106,18 @@ class StatisticsController extends Controller {
 		$id = $request[2];
 		try {
 			$stats = new StatisticsAccess();
-			$_REQUEST["playoffsStanding"] = $stats->getPlayoffsStanding($id);
+			$_REQUEST["playoffsStanding"] = serialize($stats->getPlayoffsStanding($id));
+		} catch (Exception $e) {
+			throw $e;
+		}
+		return "playoffsPage";
+	}
+	
+	private function cup2($request) {
+		$id = $request[2];
+		try {
+			$stats = new StatisticsAccess();
+			$_REQUEST["playoffsStanding"] = serialize($stats->getPlayoffsStanding($id));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -116,7 +127,7 @@ class StatisticsController extends Controller {
 	private function leaguestats($request) {
 		try {
 			$leagueStatsAccess = new LeagueAccess();
-			$_REQUEST["leagueStats"] = $leagueStatsAccess->getLeagueStats();
+			$_REQUEST["leagueStats"] = serialize($leagueStatsAccess->getLeagueStats());
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -127,7 +138,7 @@ class StatisticsController extends Controller {
 		$key = $request[2];
 		try {
 			$playerAccess = new PlayerAccess();
-			$_REQUEST["searchResult"] = $playerAccess->searchPlayer($key);
+			$_REQUEST["searchResult"] = serialize($playerAccess->searchPlayer($key));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -138,7 +149,7 @@ class StatisticsController extends Controller {
 		$key = $request[2];
 		try {
 			$teamAccess = new TeamAccess();
-			$_REQUEST["searchResult"] = $teamAccess->searchTeam($key);
+			$_REQUEST["searchResult"] = serialize($teamAccess->searchTeam($key));
 		} catch (Exception $e) {
 			throw $e;
 		}

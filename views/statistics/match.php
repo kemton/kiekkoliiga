@@ -25,7 +25,7 @@ if ($seasonId > 7){
 
 $stage = "";
 
-$matchStageName = unserialize($match->__get("stage"))->__get("stageName");
+$matchStageName = $match->__get("stage")->__get("stageName");
 
 if ($matchStageName == 'ottelut' || $matchStageName == 'yhdistetty' || $matchStageName == ""){
 	$stage = "runkosarjaottelu";
@@ -52,7 +52,7 @@ else{
 }
 
 // ---------------------REFORMAT----------------------------------------
-$p = unserialize($match->__get("periodStats"));
+$p = $match->__get("periodStats");
 $homeTeamSaves1 = $p['home']['saves'][1];
 $homeTeamSaves2 = $p['home']['saves'][2];
 $homeTeamSaves3 = $p['home']['saves'][3];
@@ -85,11 +85,11 @@ float: right;
 #gameBox th { font-weight: normal; background-color: #c9d7e1; }
 #gameBox td img { width: 14px; height: 14px; vertical-align: top; }</style>';
 
-$homeTeam = unserialize($match->__get("homeTeam"));
+$homeTeam = $match->__get("homeTeam");
 $homeTeamName = $homeTeam->__get("name");
 $homeTeamLogo = logosmall($homeTeam->__get("id"));
 
-$visitorTeam = unserialize($match->__get("visitorTeam"));
+$visitorTeam = $match->__get("visitorTeam");
 $visitorTeamName = $visitorTeam->__get("name");
 $visitorTeamLogo = logosmall($visitorTeam->__get("id"));
 
@@ -155,11 +155,11 @@ if($homeTeamSaves1 <> ""){
 }
 echo("<p><a href=\"/team/\">" . $homeTeamName . "</a>:<br/><br/>");
 
-printPlayerStats($match->__get("id"), unserialize($match->__get("homeTeamMatchPlayers")), $walkover);
+printPlayerStats($match->__get("id"), $match->__get("homeTeamMatchPlayers"), $walkover);
 
 echo("<br/><br/><a href=\"/team/\">" . $visitorTeamName . "</a>:<br/><br/>");
 
-printPlayerStats($match->__get("id"), unserialize($match->__get("visitorTeamMatchPlayers")), $walkover);
+printPlayerStats($match->__get("id"), $match->__get("visitorTeamMatchPlayers"), $walkover);
 
 if ($report != NULL){
 	echo "<br/><br/>Otteluraportti:<hr />{$report}<hr /><br/>";
@@ -168,7 +168,10 @@ else {
 	echo "<br/><br/>";
 }
 
-$currentUserName = unserialize($_SESSION["user"])->__get("name");
+$user = unserialize($_SESSION["user"]);
+if($user) {
+	$currentUserName = $user->__get("name");
+}
 
 if ($match->__get("referee") == $currentUserName || $context["user"]["is_admin"] == 1){
 	echo "<b><a href=\"/muokkaaottelua?id={$match->__get("id")}\">Ottelutilastojen ja raportin muokkaus.</a></b><br/>";
@@ -178,15 +181,14 @@ echo "<br/>Tuomari: " . $match->__get("referee") . "<br/>";
 
 echo "<br/>Lisätty: {$match->__get("date")} {$match->__get("time")}<br/></p><hr />";
 
-$comments = unserialize($match->__get("comments"));
+$comments = $match->__get("comments");
 printMatchComments($comments, $match->__get("id"));
 
 function printPlayerStats($matchId, $matchPlayers, $walkover){     
 	//echo("<pre>");print_r($matchPlayers);echo("</pre>");
   if ($matchPlayers){
 		foreach($matchPlayers as $matchPlayer){
-			$matchPlayer = unserialize($matchPlayer);
-			$player = unserialize($matchPlayer->__get("player"));
+			$player = $matchPlayer->__get("player");
 			$id = $player->__get("id");
 			$name = $player->__get("name");
 			$goals = $matchPlayer->__get("goals");
@@ -199,7 +201,7 @@ function printPlayerStats($matchId, $matchPlayers, $walkover){
 			$plusminusText .= $plusminus . '</span>';
 			
 			printf ("");
-			echo("<a href=\"/pelaaja/{$id}\">{$name}</a> {$goals}+{$assists}={$total} {$plusminusText}\n<br/>");
+			echo("<a href=\"/player/{$name}\">{$name}</a> {$goals}+{$assists}={$total} {$plusminusText}\n<br/>");
 		}
 	}
 	else if ($walkover == 'vieras' || $walkover == 'koti'){

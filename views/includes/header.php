@@ -23,6 +23,7 @@ include("functionInclude.php");
 	<script type="text/javascript" src="/js/auroramenu.js"></script>
 	<script type="text/javascript" src="/js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/js/addComment.js"></script>
+	<script type="text/javascript" src="/js/search.js"></script>
 	
 	<script>
 		$(function() {

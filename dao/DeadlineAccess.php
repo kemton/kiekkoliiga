@@ -17,7 +17,7 @@ class DeadlineAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($deadline);
+		return $deadline;
 	}
 }
 ?>

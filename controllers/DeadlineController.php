@@ -6,7 +6,7 @@ class DeadlineController extends Controller {
 			$deadlineAccess = new DeadlineAccess();
 			$deadline = $deadlineAccess->getCurrentDeadline();
 			
-			$_REQUEST["deadline"] = $deadline;
+			$_REQUEST["deadline"] = serialize($deadline);
 		} catch (Exception $e) {
 			$return = "exceptionPage";
 			throw $e;

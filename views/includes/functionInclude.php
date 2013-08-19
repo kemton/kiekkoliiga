@@ -45,7 +45,7 @@ function teamlogo($teamID, $nospace = 0) {
 
 function printPlayerNameWithLink($id, $name, $isBoard) {
 	if($id != 0) {
-		echo("<b><a href=\"/player/{$id}\"");
+		echo("<b><a href=\"/player/{$name}\"");
 		if($isBoard) {
 			 echo("style=\"color: #ee0000;\"");
 		}
@@ -116,7 +116,27 @@ function timeToDeadline($day, $month, $year, $hour){
 		return $tuloste;
 	}
 	
-    }
+}
+
+
+function print_row_for_table($data, $column_option = array()) {
+	static $row_number = 0;
+	$row_number++;
+	
+	if($row_number % 2 == 0) {
+		$parity = 'even';
+	}
+	else {
+		$parity = 'odd';
+	}
+	echo("<tr class=\"{$parity}{$i}\">\n");
+
+	foreach($data as $column) {
+		echo("\t<td" . $column_option[$i] . ">" . $column . "</td>\n");
+	}
+	echo("</tr>\n");
+}
+
 
 
 ?>

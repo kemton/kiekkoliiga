@@ -139,7 +139,7 @@ class PlayerAccess extends DatabaseAccess {
 	private $IS_USER_REFEREE = "SELECT smf_members.tuomari FROM smf_members WHERE id_member = :memberId";
 	private $GET_IS_BOARD_BY_FORUM_ID = "SELECT COUNT(*) AS isBoard FROM smf_members WHERE id_member = :forumId AND id_group = 1";
 	private $GET_FORUM_NAME_BY_FORUM_ID = "SELECT member_name FROM smf_members WHERE id_member = :forumId LIMIT 1";
-	private $SEARCH_PLAYER ="SELECT pelaajaID FROM pelaaja WHERE nimi LIKE '%:playerName%' LIMIT 20";
+	private $SEARCH_PLAYER ="SELECT pelaajaID FROM pelaaja WHERE nimi LIKE :playerName OR entiset LIKE :playerName LIMIT 20";
 	
 	function __construct() {
 		try {
@@ -175,7 +175,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($player);
+		return $player;
 	}	
 	
 	public function getPlayerByForumId($forumId) {
@@ -191,7 +191,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($player);
+		return $player;
 	}
 	
 	public function getPlayerByName($playerName) {
@@ -210,13 +210,13 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($player);
+		return $player;
 	}
 	
 	public function getPlayerStatsByName($playerName) {
 		try {
 			/* kemton: Hämärä kohta, katsottava uusiksi, nopeasti tehty!! */
-			$player = unserialize($this->getPlayerByName($playerName));
+			$player = $this->getPlayerByName($playerName);
 			$id = $player->__get("id");
 			$name = $player->__get('name');
 			$team = $player->__get('team');
@@ -240,13 +240,10 @@ class PlayerAccess extends DatabaseAccess {
 			$lastMatches = $this->getPlayerLastMatchesByName($playerName);
 			$playerStats->__set('lastMatches', $lastMatches);
 			
-			//echo "<pre>";
-			//print_r(unserialize($playerStats->__get('lastMatches')));
-			//echo "</pre>";
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($playerStats);
+		return $playerStats;
 	}
 	
 	/*public function getPlayerAchievementsById($playerID) {
@@ -272,7 +269,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($achievementsList);
+		return $achievementsList;
 	}
 	
 	/*public function getPlayerStatsById($playerID) {
@@ -308,7 +305,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($statsList);
+		return $statsList;
 	}
 	/*
 	public function getPlayerTotalStatsById($playerID) {
@@ -338,7 +335,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($statsList);
+		return $statsList;
 	}
 	
 	/*public function getPlayerLastMatchesById($playerID) {
@@ -362,7 +359,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($matchList);
+		return $matchList;
 	}
 	
 	/*public function getPlayerSuspensionsById($playerID) {
@@ -386,12 +383,15 @@ class PlayerAccess extends DatabaseAccess {
 	public function getPlayerIdByUserId($userId) {
 		try {
 			$key = parent::executeStatement($this->GET_PLAYER_BY_USER_ID, array(":memberId" => $userId));
-			if (empty($key)) { throw new Exception('User not found');}
-			$playerId = $key[0]["pelaajaID"];
+			if (count($key) > 0) {
+				return $key[0]["pelaajaID"];
+			} else {
+				return 0;
+			}
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return $playerId;
+		
 	}
 	
 	public function isUserReferee($memberId) {
@@ -450,6 +450,7 @@ class PlayerAccess extends DatabaseAccess {
 			$user->__set('isReferee', $isReferee);
 			
 			$playerId = $this->getPlayerIdByUserId($id);
+			
 			if ($playerId <> 0) {
 				$player = $this->getPlayerById($playerId);
 				$user->__set('player', $player);
@@ -457,12 +458,12 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($user);
+		return $user;
 	}
 
 	public function searchPlayer($key) {
 		try {
-			$result = parent::executeStatement($this->SEARCH_PLAYER, array(":playerName" => $key));
+			$result = parent::executeStatement($this->SEARCH_PLAYER, array("playerName" => "%{$key}%"));
 			$playerList = array();
 			foreach ($result as $value) {
 				$player = $this->getPlayerById($value["pelaajaID"]);
@@ -471,7 +472,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($playerList);
+		return $playerList;
 	}
 
 }

@@ -30,7 +30,7 @@ class UploadController extends Controller {
 	private function upload() {
 		try {
 			$uploadAccess = new UploadAccess();
-			$_REQUEST["uploads"] = $uploadAccess->getAvailableUploads();
+			$_REQUEST["uploads"] = serialize($uploadAccess->getAvailableUploads());
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -38,13 +38,16 @@ class UploadController extends Controller {
 	}
 	
 	private function match($request) {
-		$leagueId = $request["2"];
+		/*$leagueId = $request["2"];
 		$homeTeamId = $request["3"];
-		$visitorTeamId = $request["4"];
+		$visitorTeamId = $request["4"];*/
+		$leagueId = $_GET["leagueid"];
+		$homeTeamId = $_GET["hometeam"];
+		$visitorTeamId = $_GET["visitorteam"];
 		try {
 			$uploadAccess = new UploadAccess();
 			// get teams name and players, and check is valid match (still initialize)
-			$_REQUEST["uploadMatch"] = $uploadAccess->initRegularSeasonMatchUpload($leagueId, $homeTeamId, $visitorTeamId);
+			$_REQUEST["uploadMatch"] = serialize($uploadAccess->initRegularSeasonMatchUpload($leagueId, $homeTeamId, $visitorTeamId));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -59,7 +62,7 @@ class UploadController extends Controller {
 		try {
 			$uploadAccess = new UploadAccess();
 			// get teams name and players, and check is valid match (still initialize)
-			$_REQUEST["uploadMatch"] = $uploadAccess->initPlayoffMatchUpload($uploadId, $pairId);
+			$_REQUEST["uploadMatch"] = serialize($uploadAccess->initPlayoffMatchUpload($uploadId, $pairId));
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -69,29 +72,78 @@ class UploadController extends Controller {
 	private function addmatch($request) {
 		$leagueId = $request["2"];
 		try {
-			$match = new Match();
+			$playerAccess = new PlayerAccess();
+			$teamAccess = new TeamAccess();
+			$stage = $leagueStageAccess->getLeagueStageById($stageId);
+			
+			$match = new Match(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 			$match->__set('league', $_POST["league"]);
 			$match->__set('stage', $_POST["league"]);
-			$match->__set('homeTeam', $_POST["homeTeamId"]);
-			$match->__set('visitorTeam', $_POST["visitorTeamId"]);
+			$match->__set('homeTeam', $teamAccess->getTeamById($_POST["homeTeamId"]));
+			$match->__set('visitorTeam', $teamAccess->getTeamById($_POST["visitorTeamId"]));
 			$match->__set('homeTeamGoals', $_POST["homeTeamGoals"]);
 			$match->__set('visitorTeamGoals', $_POST["visitorTeamGoals"]);
-			$match->__set('homeTeamMatchPlayers');
-			$match->__set('visitorTeamMatchPlayers');
-			$match->__set('date');
-			$match->__set('time');
+			$match->__set('hasReport', isset($_POST["report"]));
+			$match->__set('report', $_POST["report"]);
+			
+			$homePlayerList = array();
+			for ($i=1; $i < 9; $i++) {
+				if (!$_POST["homePlayer{$i}"] == 0) {
+					$player = $playerAccess->getPlayerById($_POST["homePlayer{$i}"]);
+					$goals = $_POST["homePlayerGoals{$i}"];
+					$assists = $_POST["homePlayerAssists{$i}"];
+					$plusMinus = $_POST["homePlayerPlusMinus{$i}"];
+					$matchPlayer = new MatchPlayer($player, $goals, $assists, $plusMinus);
+					$homePlayerList[] = $matchPlayer;
+				}
+			}
+			$match->__set('homeTeamMatchPlayers', $homePlayerList);
+			
+			$visitingPlayerList = array();
+			for ($i=1; $i < 9; $i++) {
+				if (!$_POST["visitingPlayer{$i}"] == 0) {
+					$player = $playerAccess->getPlayerById($_POST["visitingPlayer{$i}"]);
+					$goals = $_POST["visitingPlayerGoals{$i}"];
+					$assists = $_POST["visitingPlayerAssists{$i}"];
+					$plusMinus = $_POST["visitingPlayerPlusMinus{$i}"];
+					$matchPlayer = new MatchPlayer($player, $goals, $assists, $plusMinus);
+					$visitingPlayerList[] = $matchPlayer;
+				}
+			}
+			$match->__set('visitorTeamMatchPlayers', $visitingPlayerList);
+			
+			$match->__set('date', date("Y-m-d"));
+			$match->__set('time', date("H:i:s"));
 			$match->__set('referee', $_POST["referee"]);
 			$match->__set('walkover', FALSE);
 			$match->__set('overtime', $_POST["overtime"]);
-			$match->__set('periodStats');
+			for ($i=1; $i < 4; $i++) {
+				$homeTeamControl = $_POST["homeTeamControl{$i}"];
+				$visitingTeamControl = $_POST["visitingTeamControl{$i}"];
+				
+				$homeTeamSaves = $_POST["homeTeamSaves{$i}"];
+				$visitingTeamSaves = $_POST["VisitingTeamSaves{$i}"];
+				
+				// Ei pystytä laskemaan eräkohtasia laukauksia, kun ei ole eräkohtaista maalitilastointia
+				$homeTeamShots = $homeTeamSaves + $_POST["visitorTeamGoals"];
+				$visitingTeamShots = $visitingTeamSaves + $_POST["homeTeamGoals"];
+				
+				$periodStats = new MatchPeriod($i, $homeTeamControl, $visitingTeamControl, $homeTeamShots, $visitingTeamShots, $homeTeamSaves, $visitingTeamSaves);
+				$periodStatsList[] = $periodStats;
+			}
+			
+			$match->__set('periodStats', $periodStatsList);
 			
 			$uploadAccess = new UploadAccess();
-			$uploadAccess->addMatch($match);
+			//$_REQUEST["addedMatchId"] = serialize($uploadAccess->addMatch($match));
 			
+			echo "<pre>";
+			print_r($match);
+			echo "</pre>";
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return "uploadMatchPage";
+		return "addMatchPage";
 	}
 }
 ?>

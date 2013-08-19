@@ -14,8 +14,8 @@ include_once (incDir."/statisticsbar.php");
 			$standObj = unserialize($_REQUEST["playoffsStanding"]);
 			foreach ($standObj as $stand) {
 				echo "<div style=\"padding-bottom:30px;\">";
-				$team1 = unserialize($stand->__get('team1'));
-				$team2 = unserialize($stand->__get('team2'));
+				$team1 = $stand->__get('team1');
+				$team2 = $stand->__get('team2');
 				$matches = $stand->__get('matches');
 				
 				$team1logo = logolarge($team1->__get('id'));
@@ -49,14 +49,13 @@ include_once (incDir."/statisticsbar.php");
 				<?php
 				$i=0;			
 				foreach ($matches as $match) {
-					$match = unserialize($match);
 					if ($i%2) {
 						echo '<tr class="odd">';
 					} else {
 						echo '<tr class="even">';
 					}
-					$homeTeam = unserialize($match->__get('homeTeam'));
-					$visitorTeam = unserialize($match->__get('visitorTeam'));
+					$homeTeam = $match->__get('homeTeam');
+					$visitorTeam = $match->__get('visitorTeam');
 					$homeTeamlogo = logosmall($homeTeam->__get('id'));
 					$visitorTeamlogo = logosmall($visitorTeam->__get('id'));
 				

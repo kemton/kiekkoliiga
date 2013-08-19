@@ -39,10 +39,10 @@ if(!isset($_SESSION["user"]))
 		
 		// user has player profile?
 		if ($user->__get('player') <> NULL) {
-			$player = unserialize($user->__get('player'));
+			$player = $user->__get('player');
 			// player profile has team?
 			if ($player->__get('team') <> NULL) {
-				$team = unserialize($player->__get('team'));
+				$team = $player->__get('team');
 			}
 		}
 		

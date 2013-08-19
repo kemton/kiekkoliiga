@@ -402,7 +402,7 @@ input[type=submit]{
 /*background-color: #bacedd; border: 1px solid #a4bdd0; */margin-top: 4px; background-color: #FFFFFF; font-weight: bold; color: #54717d;
 }
 
-button.submit {
+button {
 	margin-top: 4px;
 	background-color: #FFFFFF;
 	font-weight: bold;
@@ -489,7 +489,7 @@ blockquote:before {
 .jeah{ border-collapse: collapse!important; }
 .st{ border-collapse: collapse!important; }
 
-table.statistics tr.odd { background-color: #d6e0e7; border-top: 1px solid #b1c0ca; }
+table.statistics tr.odd { background-color: #CED9E0; border-top: 1px solid #b1c0ca; }
 table.statistics tr.even{ border-top: 1px solid #b1c0ca; }
 
 table.statistics th { background-color: #ced8df; text-align: center; padding: 2px; }
@@ -498,3 +498,8 @@ table.statistics { border: 1px solid #b1c0ca; border-collapse: collapse!importan
 .left { text-align: left!important; }
 .center { text-align: center!important; }
 .right { text-align: right!important; }
+
+
+.ui-widget-content a:link {
+ color: rgb(24, 65, 97);
+}

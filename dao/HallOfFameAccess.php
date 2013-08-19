@@ -29,7 +29,7 @@ class HallOfFameAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($HOFs);
+		return $HOFs;
 	}
 	
 	public function addPlayerToHOF($adder, $ip, $player, $text) {

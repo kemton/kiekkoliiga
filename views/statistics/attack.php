@@ -27,7 +27,7 @@ include_once (incDir."/statisticsbar.php");
 					$i=1;
 					$attackStatsList = unserialize($_REQUEST["attackStats"]);
 					foreach ($attackStatsList as $attackStats) {
-						$team = unserialize($attackStats->__get('team'));
+						$team = $attackStats->__get('team');
 						if (strlen($team->__get('name')) >= 19) {
 							$teamName = $team->__get('abbreviation');
 						} else {

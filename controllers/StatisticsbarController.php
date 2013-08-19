@@ -7,11 +7,11 @@ class StatisticsbarController extends Controller {
 			/* statisticbar */
 			$leagueAccess = new LeagueAccess();
 			$leagues = $leagueAccess->getAllLeaguesBySeasonId($season->__get('id'));
-			$_REQUEST["leagues"] = $leagues;
+			$_REQUEST["leagues"] = serialize($leagues);
 
 			$seasonAccess = new SeasonAccess();
 			$seasons = $seasonAccess->getAllSeasons();
-			$_REQUEST["seasons"] = $seasons;
+			$_REQUEST["seasons"] = serialize($seasons);
 			
 			/* /statisticbar */
 			$return = "rightbarPage";

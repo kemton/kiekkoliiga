@@ -48,7 +48,7 @@ class Match {
 	}
 	
 	public function getName() {
-		return unserialize($this->homeTeam)->__get("name") . " - " . unserialize($this->visitorTeam)->__get("name");
+		return $this->homeTeam->__get("name") . " - " . $this->visitorTeam->__get("name");
 	}
 	
 }

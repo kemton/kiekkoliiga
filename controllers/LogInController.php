@@ -15,7 +15,7 @@ class LogInController extends Controller {
 			$playerAccess = new PlayerAccess();
 			$user = $playerAccess->getLoggedInUser($id, $username, $isAdmin);
 			
-			$_SESSION["user"] = $user;
+			$_SESSION["user"] = serialize($user);
 			
 			$return = "homePage";
 		} catch (Exception $e) {

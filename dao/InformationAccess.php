@@ -41,7 +41,7 @@ class InformationAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($boardInfos);
+		return $boardInfos;
 	}
 	
 	public function getLastPaitsio() {
@@ -61,7 +61,7 @@ class InformationAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($paitsioInfos);
+		return $paitsioInfos;
 	}
 	
 	public function getLastCommented() {
@@ -73,7 +73,7 @@ class InformationAccess extends DatabaseAccess {
 			$comments = array();
 			foreach($results as $result) {
 				$writerId = $result["kirjoittajaID"];
-				$writer = unserialize($playerAccess->getPlayerByForumId($writerId));
+				$writer = $playerAccess->getPlayerByForumId($writerId);
 				$writerId = $writer->__get("id");
 				$writerName = $writer->__get("name");
 				$writerIsBoard = $writer->__get("isBoard");
@@ -87,22 +87,22 @@ class InformationAccess extends DatabaseAccess {
 				$target = $result["kohde"];
 				$targetId = $result["kohdeID"];
 				if($target == 0) { // Board or Press release
-					$boardInfo = unserialize($this->getBoardInfoById($targetId));
+					$boardInfo = $this->getBoardInfoById($targetId);
 					$name = $boardInfo->__get("header");
 					$targetLink = "/board-info/";
 				}
 				else if($target == 1) { // Match
-					$match = unserialize($statisticsAccess->getMatchById($targetId));
+					$match = $statisticsAccess->getMatchById($targetId);
 					$name = $match->getName();
 					$targetLink = "/statistics/ottelu/";
 				}
 				else if($target == 2) { // Paitsio
-					$boardInfo = unserialize($this->getPaitsioArticleById($targetId));
+					$boardInfo = $this->getPaitsioArticleById($targetId);
 					$name = $boardInfo->__get("header");
 					$targetLink = "/paitsio/";
 				}
 				else if($target == 3) { // News
-					//$boardInfo = unserialize($this->getNewsById($targetId));
+					//$boardInfo = $this->getNewsById($targetId);
 					//$name = $boardInfo->__get("header");
 					$targetLink = "/news/";
 				}
@@ -137,11 +137,19 @@ class InformationAccess extends DatabaseAccess {
 	
 	public function getLastTeamNews() {
 		try {
-			$key = parent::executeStatement($this->GET_LAST_TEAM_NEWS, array());
+			$results = parent::executeStatement($this->GET_LAST_TEAM_NEWS, array());
+			foreach($results as $boardInfo) {
+				$id = $boardInfo['tiedoteID'];
+				$header = $boardInfo['otsikko'];
+				$writer = $boardInfo['lyhenne'];
+				$time = $boardInfo['pvm'];
+				$newBoardInfo = new BoardInfo($id, $header, $writer, $time, null, null, null);
+				$boardInfos[] = $newBoardInfo;
+			}
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return $key;
+		return $boardInfos;
 	}
 	
 	public function getLastLookingForTeam() {
@@ -168,7 +176,7 @@ class InformationAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($boardInfo);
+		return $boardInfo;
 	}
 	
 	public function getAllBoardInfos() {
@@ -186,7 +194,7 @@ class InformationAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($boardInfos);
+		return $boardInfos;
 	}
 
 	public function getPaitsioArticleById($paitsioid) {
@@ -205,7 +213,7 @@ class InformationAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($boardInfo);
+		return $boardInfo;
 	}
 	
 	public function getAllPaitsioArticle() {
@@ -223,7 +231,7 @@ class InformationAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($boardInfos);
+		return $boardInfos;
 	}
 	
 	public function updatePaitsioReadCount($paitsioid) {

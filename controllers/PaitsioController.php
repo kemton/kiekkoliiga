@@ -10,7 +10,7 @@ class PaitsioController extends Controller {
 			
 			if ($id != null && is_numeric($id)) {
 				$onePaitsio = $info->getPaitsioArticleById($id);
-				$_REQUEST["paitsioArticle"] = $onePaitsio;
+				$_REQUEST["paitsioArticle"] = serialize($onePaitsio);
 				
 				// Update read count
 				if($_SESSION["read"] <> "paitsio#".$id) {
@@ -19,7 +19,7 @@ class PaitsioController extends Controller {
 				}
 			} else {
 				$allPaitsio = $info->getAllPaitsioArticle();
-				$_REQUEST["allPaitsioArticles"] = $allPaitsio;
+				$_REQUEST["allPaitsioArticles"] = serialize($allPaitsio);
 			}
 			$return = "paitsioPage";
 		} catch (Exception $e) {

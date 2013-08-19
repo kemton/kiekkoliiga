@@ -27,8 +27,8 @@ include_once (incDir."/statisticsbar.php");
 					$i = 1;
 					$scoreboardList = unserialize($_REQUEST["scoreboard"]);
 					foreach ($scoreboardList as $scoreboard) {
-						$player = unserialize($scoreboard->__get('player'));
-						$team = unserialize($scoreboard->__get('team'));
+						$player = $scoreboard->__get('player');
+						$team = $scoreboard->__get('team');
 						if (strlen($team->__get('name')) >= 19) {
 							$teamName = $team->__get('abbreviation');
 						} else {

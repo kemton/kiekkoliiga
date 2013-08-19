@@ -29,7 +29,7 @@ function printComments($comments, $targetId, $type) {
 		$time = $comment->__get("timestamp");
 		$commentText = $comment->__get("commentText");
 		
-		$writer = unserialize($comment->__get("writer"));
+		$writer = $comment->__get("writer");
 		$writerId = $writer->__get("id");
 		$writerName = $writer->__get("name");
 		if($writerName == "") {

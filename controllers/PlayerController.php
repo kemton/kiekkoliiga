@@ -25,7 +25,7 @@ class PlayerController extends Controller {
 					$id = utf8_decode($id);
 					
 					$playerStats = $stats->getPlayerStatsByName($id);
-					$_REQUEST["playerStats"] = $playerStats;
+					$_REQUEST["playerStats"] = serialize($playerStats);
 					
 					/*$player = $stats->getPlayerByName($id);
 					$_REQUEST["player"] = $player;
@@ -60,7 +60,7 @@ class PlayerController extends Controller {
 		try {
 			$playerAccess = new PlayerAccess();
 			$playerAchievements = $playerAccess->getPlayerAchievementsByName($playerName);
-			$_REQUEST["playerAchievements"] = $playerAchievements;
+			$_REQUEST["playerAchievements"] = serialize($playerAchievements);
 			return "achievementsPage";
 		} catch (Exception $e) {
 			throw $e;
@@ -72,7 +72,7 @@ class PlayerController extends Controller {
 		try {
 			$playerAccess = new PlayerAccess();
 			$kiekkotkStats = $playerAccess->getPlayerKiekkotkStatsByName($playerName);
-			$_REQUEST["kiekkotkStats"] = $kiekkotkStats;
+			$_REQUEST["kiekkotkStats"] = serialize($kiekkotkStats);
 			return "kiekkotkStatsPage";
 		} catch (Exception $e) {
 			throw $e;

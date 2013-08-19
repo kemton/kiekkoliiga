@@ -5,9 +5,12 @@ class RightbarController extends Controller {
 		try {
 			/* rightbar */
 			$stats = new StatisticsAccess();
-			
 			$standings = $stats->getCurrentStandingsList();
-			$_REQUEST["standingsList"] = $standings;
+			$_REQUEST["standingsList"] = serialize($standings);
+			
+			$informationAccess = new InformationAccess();
+			$teamNews = $informationAccess->getLastTeamNews();
+			$_REQUEST["lastTeamnews"] = serialize($teamNews);
 			
 			/*
 			$standings = $stats->getCurrentLeagueStandings();

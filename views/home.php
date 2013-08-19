@@ -28,8 +28,16 @@ include_once (incDir."/rightbar.php");
 			<p>IRC-kanava: #kiekkoliiga @ IRCnet
 		</div>
 	</div>
-	
-	<?php foreach($_REQUEST["lastNews"] as $key=>$value){ ?>
+	<div class="box">
+		<div class="top">
+			<div class="padding">Kiekossa tapahtunutta</div>
+		</div>
+		<div class="content">
+			<iframe src="http://kiekko.tk:443/eventbox.html?v=2" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
+		</div>
+	</div>
+
+	<?php foreach(unserialize($_REQUEST["lastNews"]) as $key=>$value){ ?>
 	<div class="box">
 		<div class="top">
 			<div class="padding"><?php echo '<strong><a href="#">'.$value["subject"].'</a></strong> - '.date("j.n.Y", $value["poster_time"]); ?></div>
@@ -39,16 +47,16 @@ include_once (incDir."/rightbar.php");
 		</div>
 	</div>
 	<?php } ?>
-	<div class="box">
+	<!--<div class="box">
 		<div class="top">
-			<div class="padding">Jee</div>
+			<div class="padding">Box</div>
 		</div>
 		<div class="content">
 			<pre>
 			<?php //print_r($_REQUEST); ?>
 			</pre>
 		</div>
-	</div>
+	</div>-->
 <?php
 include_once (incDir."/footer.php");
 ?>
