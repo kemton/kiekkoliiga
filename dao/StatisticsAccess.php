@@ -20,6 +20,13 @@ class StatisticsAccess extends DatabaseAccess {
 										LEFT JOIN sarjatilasto ON sarjatilasto.sarjatilastoID = rstilasto.sarjatilastoID
 										LEFT JOIN sarja ON sarja.sarjaID = sarjatilasto.sarjaID WHERE sarja.sarjataso = '2. divari' AND sarja.kausiID =
 										(SELECT kausiID FROM kausi ORDER BY kausiID DESC LIMIT 1) ORDER BY voitot*2+tasapelit DESC, tehdyt-paastetyt DESC, tehdyt DESC";
+	
+	// Kovakoodattu validit runkosarjat... %divari%, keksittävä joku parempiki tapa erottaa peruskauden runkosarjat cupeista / turnauksista
+	private $GET_CURRENT_REGULAR_SEASONS_STANDINGS_ID = "SELECT sarjatilasto.sarjatilastoID
+										FROM sarja
+										LEFT JOIN sarjatilasto ON sarjatilasto.sarjaID = sarja.sarjaID
+										WHERE (sarja.sarjataso = 'liiga' OR sarja.sarjataso LIKE '%divari%') AND tyyppi = 'sarjataulukko'
+										AND sarja.kausiID =	(SELECT kausiID FROM kausi ORDER BY kausiID DESC LIMIT 1)";
 	/*private $GET_CURRENT_LEAGUE_STANDINGS = "SELECT sarjatilasto.sarjatilastoID, rstilasto.joukkueID, rstilasto.voitot, rstilasto.tasapelit, rstilasto.tappiot, rstilasto.tehdyt,rstilasto.paastetyt, rstilasto.pisteet, rstilasto.torjutut, joukkue.nimi
 										FROM rstilasto
 										LEFT JOIN joukkue ON joukkue.joukkueID = rstilasto.joukkueID
@@ -55,7 +62,9 @@ class StatisticsAccess extends DatabaseAccess {
 									FROM rstilasto
 									LEFT JOIN joukkue ON joukkue.joukkueID = rstilasto.joukkueID
 									WHERE sarjatilastoID = :standingsid
-									ORDER BY pisteet DESC";
+									ORDER BY pisteet DESC,
+									(rstilasto.tehdyt + rstilasto.paastetyt) ASC,
+									(rstilasto.voitot + rstilasto.tasapelit + rstilasto.tappiot) ASC";
 	private $GET_STANDINGS_BY_NAME = "SELECT sarja.nimi, rstilasto.rstilastoID, rstilasto.sarjatilastoID, rstilasto.joukkueID, joukkue.nimi, joukkue.lyhenne, rstilasto.voitot, rstilasto.tasapelit, rstilasto.tappiot, rstilasto.tehdyt, rstilasto.paastetyt, rstilasto.pisteet, rstilasto.torjutut
 									FROM sarja
 									LEFT JOIN sarjatilasto ON sarjatilasto.sarjaID = sarja.sarjaID
@@ -200,6 +209,16 @@ class StatisticsAccess extends DatabaseAccess {
                   WHERE otteluID = :matchId
                   AND tehot.joukkueID = :teamId
                   AND tehot.pelaajaID = pelaaja.pelaajaID";
+	private $GET_COMPETITION_STATS_FOR_PLAYERS_BY_COMPETITION_ID_AND_TEAM_ID = "SELECT pelaaja.nimi AS nimi, pelaaja.pelaajaID, 
+									SUM(ottelut) AS ot, SUM(maalit) AS ma, 
+									SUM(syotot) AS sy, SUM(maalit)+SUM(syotot) AS pt,
+                  (SUM(maalit)+SUM(syotot))/SUM(ottelut) AS pperot, maaliero
+									FROM pelaaja, tehotilasto
+									WHERE pelaaja.pelaajaID = tehotilasto.pelaajaID
+									AND tehotilasto.joukkueID = :teamId
+									AND sarjatilastoID = :competitionId
+									GROUP BY pelaaja.pelaajaID
+									ORDER BY pt DESC, ma DESC, ot, nimi";
 		
 	function __construct() {
 		parent::__construct();
@@ -244,17 +263,36 @@ class StatisticsAccess extends DatabaseAccess {
 		}
 		return $result;
 	}
+	
+	public function getCurrentRegularSeasonsStandingsId() {
+		try {
+			$result = parent::executeStatement($this->GET_CURRENT_REGULAR_SEASONS_STANDINGS_ID, array());
+			$standIdList = array();
+			foreach ($result as $stand) {
+				$standIdList[] = $stand["sarjatilastoID"];
+			}
+		} catch (Exception $e) {
+			throw $e;
+		}
+		return $standIdList;
+	}
 
 	public function getCurrentStandingsList() {
 		try {
-			$league = $this->getCurrentLeagueStandingsId();
-			$firstDivision = $this->getCurrentFirstDivisionStandingsId();
-			$secondDivision = $this->getCurrentSecondDivisionStandingsId();
-			
+			//$league = $this->getCurrentLeagueStandingsId();
+			//$firstDivision = $this->getCurrentFirstDivisionStandingsId();
+			//$secondDivision = $this->getCurrentSecondDivisionStandingsId();
+			$standIdList = $this->getCurrentRegularSeasonsStandingsId();
 			$standingsList = array();
+			
+			foreach ($standIdList as $stand) {
+				$standingsList[] = $this->getStandingsById($stand);
+			}
+			
+			/*$standingsList = array();
 			$standingsList[] = $this->getStandingsById($league);
 			$standingsList[] = $this->getStandingsById($firstDivision);
-			$standingsList[] = $this->getStandingsById($secondDivision);
+			$standingsList[] = $this->getStandingsById($secondDivision);*/
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -276,7 +314,10 @@ class StatisticsAccess extends DatabaseAccess {
 				$points = $value["pisteet"];
 				$matches = $wins + $draws + $losses;
 				$goalDifference = $goals - $goalsAgainst;
-				$scoresPerMatch = round($points/$matches, 2);
+				$scoresPerMatch = 0;
+				if($matches > 0) {
+					$scoresPerMatch = round($points/$matches, 2);
+				}
 				
 				$standingRow = new Standings($matches, $wins, $draws, $losses, $goals, $goalsAgainst, $points, $goalDifference, $scoresPerMatch);
 				
@@ -288,7 +329,7 @@ class StatisticsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($standings);
+		return $standings;
 	}
 	
 	/*public function getStandingsByName($leaguesName, $seasonid) {
@@ -338,7 +379,7 @@ class StatisticsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($scoreboards);
+		return $scoreboards;
 	}
 	
 	/*public function getScoreboardByName($leaguesName, $seasonid) {
@@ -390,7 +431,7 @@ class StatisticsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($matches);
+		return $matches;
 	}
 	
 	public function getMatchById($matchId) {
@@ -433,7 +474,7 @@ class StatisticsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($theMatch);
+		return $theMatch;
 	}
 	
 	/*public function getMatchesByName($leaguesName, $seasonid) {
@@ -467,10 +508,14 @@ class StatisticsAccess extends DatabaseAccess {
 				$homeGameShots = $value["homeGameShots"];
 				$guesGameShots = $value["guesGameShots"];
 				$shots = $homeGameShots+$guesGameShots;
-				$shotsPerMatch = round($shots/$matches, 2);
-				$goalsPerMatch = round($goals/$matches, 2);
-				$scoringPercent = round(($goals+$shots)/$matches, 2);
-				
+				$shotsPerMatch = 0;
+				$goalsPerMatch = 0;
+				$scoringPercent = 0;
+				if($matches > 0) {
+					$shotsPerMatch = round($shots/$matches, 2);
+					$goalsPerMatch = round($goals/$matches, 2);
+					$scoringPercent = round(($goals+$shots)/$matches, 2);
+				}
 				$newAttackStats = new AttackStats($shots, $goals, $shotsPerMatch, $goalsPerMatch, $scoringPercent);
 				$team = $teamAccess->getTeamById($teamId);
 				$newAttackStats->__set('team', $team);
@@ -480,7 +525,7 @@ class StatisticsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($attackStatsList);
+		return $attackStatsList;
 	}
 	
 	public function getAttackStatsByName($leaguesName, $seasonid) {
@@ -515,11 +560,18 @@ class StatisticsAccess extends DatabaseAccess {
 				$opponentHomeGameShots = $value["opponentHomeGameShots"];
 				$opponentGuestGameShots = $value["opponentGuestGameShots"];
 				$totalShots = $opponentHomeGameShots + $opponentGuestGameShots;
-				$savesPerMatch = round($saves/$matches, 2);
-				$goalsAgainstPerMatch = round($goalsAgainst/$matches, 2);
 				
-				$savesPercent = round(($saves/$totalShots)*100, 2);
+				$savesPerMatch = 0;
+				$goalsAgainstPerMatch = 0;
+				if($matches > 0) {
+					$savesPerMatch = round($saves/$matches, 2);
+					$goalsAgainstPerMatch = round($goalsAgainst/$matches, 2);
+				}
 				
+				$savesPercent = 0;
+				if($totalShots > 0) {
+					$savesPercent = round(($saves/$totalShots)*100, 2);
+				}
 				$newDefenceStats = new DefenceStats($saves, $goalsAgainst, $savesPerMatch, $goalsAgainstPerMatch, $savesPercent);
 				$team = $teamAccess->getTeamById($teamId);
 				$newDefenceStats->__set('team', $team);
@@ -529,7 +581,7 @@ class StatisticsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($defenceStatsList);
+		return $defenceStatsList;
 	}
 	
 	public function getMatchPlayersByMatchIdAndTeamId($matchId, $teamId) {
@@ -544,12 +596,12 @@ class StatisticsAccess extends DatabaseAccess {
 				$assists = $row['syotot'];
 				$plusminus = $row['maaliero'];
 				$matchPlayer = new MatchPlayer($player, $goals, $assists, $plusminus);
-				$matchPlayers[] = serialize($matchPlayer);
+				$matchPlayers[] = $matchPlayer;
 			}
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($matchPlayers);
+		return $matchPlayers;
 	}
 	
 	public function getPlayoffsStanding($playoffsId) {
@@ -580,8 +632,18 @@ class StatisticsAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($standings);
+		return $standings;
 	}
+	
+	public function getCompetitionStatsForPlayersByCompetitionIdAndTeamId($teamId, $competitionId) {
+		try {
+			$key = parent::executeStatement($this->GET_COMPETITION_STATS_FOR_PLAYERS_BY_COMPETITION_ID_AND_TEAM_ID, array("teamId" => $teamId, "competitionId" => $competitionId));
+		} catch (Exception $e) {
+			throw $e;
+		}
+		return $key;
+	}
+	
 	
 }
 

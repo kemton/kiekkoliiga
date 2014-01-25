@@ -17,7 +17,7 @@ include_once (incDir."/rightbar.php");
 				echo $boardInfo->__get("writer")." - " . $boardInfo->__get("time") . " (luettu: " . $boardInfo->__get("read") . " kertaa)<br />\n";
 				echo "<h3>".$boardInfo->__get("header") . "</h3>\n";
 				echo "<p>" . bbc(nl2br($boardInfo->__get("text"))) . "</p><hr />";
-				$comments = unserialize($boardInfo->__get("comments"));
+				$comments = $boardInfo->__get("comments");
 				$id = $boardInfo->__get("id");
 				printBoardOrPressReleaseComments($comments, $id);
 			} else {

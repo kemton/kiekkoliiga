@@ -34,7 +34,7 @@ ErrorDocument 404 http://deve.kiekkoliiga.net/http-error/
 #RewriteRule ohjaa/([^/]*)$ /ohjaa.php?id=$1 [L]
 
 #Options +FollowSymLinks
-Options -Indexes
+#Options -Indexes
 
 #ErrorDocument 403 /error.html
 #order deny,allow

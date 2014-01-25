@@ -45,7 +45,7 @@ class LeagueAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($leagues);
+		return $leagues;
 	}
 	
 	// getLeagueBy sarja.sarjaID
@@ -71,7 +71,7 @@ class LeagueAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($league);
+		return $league;
 	}
 	
 	public function getLeagueStats() {
@@ -87,7 +87,7 @@ class LeagueAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($leagueStats);
+		return $leagueStats;
 	}
 	
 	public function getCountUsers() {

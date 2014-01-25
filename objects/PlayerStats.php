@@ -4,10 +4,11 @@ class PlayerStats extends Player {
 	private $statsPerSeason;
 	private $leagueTotalStats;
 	private $lastMatches;
+	private $kiekkoPlayer;
 	
-	function __construct($id, $name, $previousNames, $isAdmin, $isBoard) {
+	/*function __construct($id, $name, $previousNames, $isAdmin, $isBoard) {
 		parent::__construct($id, $name, $previousNames, $isAdmin, $isBoard);
-	}
+	}*/
 	
 	public function __set($name, $value) {
 		$this->$name = $value;

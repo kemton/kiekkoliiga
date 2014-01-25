@@ -27,9 +27,7 @@ include_once (incDir."/statisticsbar.php");
 				<tbody>
 					<?php
 					$i=1;
-					$matches = unserialize($_REQUEST["matches"]);
-					
-					foreach ($matches as $match) {
+					foreach (unserialize($_REQUEST["matches"]) as $match) {
 						if ($i%2) {
 							echo '<tr class="odd">';
 						} else {
@@ -41,8 +39,8 @@ include_once (incDir."/statisticsbar.php");
 							$isReport = '';
 						}
 						
-						$homeTeam = unserialize($match->__get("homeTeam"));
-						$visitorTeam = unserialize($match->__get("visitorTeam"));
+						$homeTeam = $match->__get("homeTeam");
+						$visitorTeam = $match->__get("visitorTeam");
 						$homeLogo = logosmall($homeTeam->__get("id"));
 						$visitorLogo = logosmall($visitorTeam->__get("id"));
 						

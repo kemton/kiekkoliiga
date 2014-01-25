@@ -10,35 +10,15 @@ include_once (incDir."/statisticsbar.php");
 			<div class="padding">Tilastot</div>
 		</div>
 		<div class="content">
-			<pre>
+			
 			<?php
-			/*$team = unserialize($_REQUEST["team"]);
+	
 			
-			echo "<h3>" . $team->getName() . "</h3><br >";
-			echo "Vastuuhenkilöt:<br />";
-			foreach ($team->getPlayers() as $value) {
-				if ($value->isAdmin()) echo $value->getName()."<br />";
-			}
-			echo "<br />";
-			echo "Pelaajat:<br />";
-			foreach ($team->getPlayers() as $value) {
-				if (!$value->isAdmin()) echo $value->getName()."<br />";
-			}
-			
-			print_r($_REQUEST["teamSeasons"]);*/
-			
-			
-			
-			
-			
-			$team = unserialize($_REQUEST["team"]);
-			$id = $team->__get("id");
-			if (!$id){
-				die ("Joukkuetta ei löytynyt.");
-			}
-
-
-
+$team = unserialize($_REQUEST["team"]);
+$teamId = $team->__get("id");
+if (!$teamId){
+	die ("Joukkuetta ei löytynyt.");
+}
 
 $name = $team->__get("name");
 $abbreviation = $team->__get("abbreviation");
@@ -57,9 +37,9 @@ echo "<h2>{$name}</h2>\n";
 echo '<table width="100%" style="border: 1px solid #c0c7cc;">
 <tr class="rivi">';
 
-$filename =  $_SERVER['DOCUMENT_ROOT'] . "/images/logos/".$id.".gif";
+$filename =  $_SERVER['DOCUMENT_ROOT'] . "/images/logos/".$teamId.".gif";
 if (file_exists($filename)) {
-	$showlogo = "/images/logos/".$id.".gif";
+	$showlogo = "/images/logos/".$teamId.".gif";
 }else $showlogo = false;
 
 if($showlogo != false){
@@ -73,23 +53,20 @@ $players = $team->__get("players");
 echo '<td width="1" style="padding-left: 5px;">';
 echo 'Vastuuhenkilöt:</td><td>';
 foreach($players as $player) {
-
-	$player = unserialize($player);
 	if($player->__get("isAdmin")) {
 		$id = $player->__get("id");
 		$name = $player->__get("name");
-		echo("<a href=\"/pelaaja/{$id}\">{$name}</a> ");
+		echo("<a href=\"/player/{$name}\">{$name}</a> ");
 	}
 }
 
 echo "</td></tr>";
 echo "<tr><td style=\"padding-left: 5px;\">Muut pelaajat:</td><td>";
 foreach($players as $player) {
-	$player = unserialize($player);
 	if($player->__get("isAdmin") == false) {
 		$id = $player->__get("id");
 		$name = $player->__get("name");
-		echo("<a href=\"/pelaaja/{$id}\">{$name}</a> ");
+		echo("<a href=\"/player/{$name}\">{$name}</a> ");
 	}
 }
 
@@ -131,6 +108,11 @@ echo "</table><br clear=\"left\"><br>";
 			
 			
 ?>
+
+
+
+
+
 <div id="tabs">
 	<ul>
 	<li><a href="#tabs-1">Kausitilastot</a></li>
@@ -140,48 +122,192 @@ echo "</table><br clear=\"left\"><br>";
 	<div id="tabs-1">
 		<?php
 		
-		$teamSeasons = $_REQUEST["teamSeasons"];
+		$teamSeasons = unserialize($_REQUEST["teamSeasons"]);
+
 		foreach($teamSeasons as $row){
 			global $mbcwf;
 			$mbcwf = 0;
-			
-			$tyyppi = $row["tyyppi"];
-			$tilastoID = $row["sarjatilastoID"];
-			$tulostus = $row["nimi"];
-			echo($tilastoID);
-			if ($tyyppi == 'pudotuspelit'){
-				echo "<h5>$tulostus / ottelut:</h5>";
-				//tulostaOttelut($id, $nimi, $tilastoID, 'pp', $kausi, $sortby, $tulostus);
+
+			$type = $row["type"];
+			$competitionId = $row["competitionId"];
+			$competitionName = $row["competitionName"];
+			$stage = $row['stageName'];
+			if ($type == 'pudotuspelit'){
+				echo "<h5>{$competitionName} / ottelut:</h5>";
+				printMatches($team, $competitionId, 'pp', $seasonId, $competitionName, $row['matches']);
 			}
-			else if ($tyyppi == 'ottelut' || $tyyppi == 'yhdistetty'){
-				echo "<h5>$tulostus / ottelut:</h5>";
-				//tulostaOttelut($id, $nimi, $tilastoID, 'rs', $kausi, $sortby, $tulostus);
+			else if ($type == 'ottelut'){
+				echo "<h5>{$competitionName} / ottelut:</h5>";
+				printMatches($team, $competitionId, 'rs', $seasonId, $competitionName, $row['matches']);
 			}
-			else if ($tyyppi == 'pisteporssi'){
-				echo "<h5>$tulostus / tilastot:</h5>";
-				//tulostaPorssi($id, $tilastoID, $kausi);
+			else if ($type == 'pisteporssi'){
+				echo "<h5>{$competitionName} / tilastot:</h5>";
+				printStatsPerCompetition($row['statsPlayers']);
 			}
-			else if ($tyyppi == 'cup'){
-				echo "<h5>$tulostus / ottelut:</h5>";
-				//tulostaOttelut($id, $tilastoID, $kausi);
+			else if ($type == 'cup2' || $type == 'yhdistetty'){
+				echo "<h5>{$competitionName} ";
+				if($stage != "Ottelut") {
+				  echo(" - {$stage} ");
+				}
+				echo "/ ottelut:</h5>";
+				printMatches($team, $competitionId, null, $seasonId, $competitionName, $row['matches']);
 			}
-		}
+		} 
 		
 		?>
 	</div>
 	<div id="tabs-2">
-		
+		<?php
+			$history = unserialize($_REQUEST['teamHistory']);
+			
+			if($history['players']) {
+			
+				?>
+				<h5>Joukkueessa pelanneet pelaajat: </h5>
+				<?php
+				foreach($history['players'] as $player) {
+					echo("<a href='/player/{$player['name']}'>{$player['name']}</a> ");
+				}
+			}
+			
+			
+			
+			if($history['seasonPlacings']) {
+				?>
+				<h5>Sijoitukset kausittain</h5>
+				<p>
+				<?php
+				foreach($history['seasonPlacings'] as $placing) {
+					echo("{$placing['seasonName']} - {$placing['league']}n {$placing['placement']}.");
+					if($placing['status']) {
+						echo(" ({$placing['status']})");
+					}
+					echo("<br/>\n");
+				}
+				echo("</p>");
+			}
+			
+			
+			if($history['regularSeasonStatistics']) {
+				?>
+				<h5>Runkosarjatilastot</h5>
+				<?php
+				$column_options = array("", "", "", "", "", "", "", "", "", "", "");
+				$first = true;
+				$previous_league = "";
+				foreach($history['regularSeasonStatistics'] as $season) {
+					if($season["nimi"] != $previous_league and $first == false) {
+						echo("</table>");
+					}
+					$first = false;
+					
+					if($season["nimi"] != $previous_league) {
+						?>
+						
+						<table class="jeah" width="580">
+						<tr>
+							<th colspan="10" align="center"><?php echo($season["nimi"]); ?></th>
+						</tr>
+						<tr>
+							<th width="12%">kausi</th>
+							<th width="7%">ott</th>
+							<th width="7%">v</th>
+							<th width="7%">t</th>
+							<th width="7%">h</th>
+							<th width="10%">tm</th>
+							<th width="10%">pm</th>
+							<th width="8%">pist</th>
+							<th width="13%">maaliero</th>
+							<th width="10%">pist/ott</th>
+							<th width="8%">rs. sija</th>
+						</tr>
+						
+						
+						<?php
+					}
+					$voitot = $season["voitot"];
+					$tasapelit = $season["tasapelit"];
+					$tappiot = $season["tappiot"] + $season["luovutukset"];
+					$tehdyt = $season["tehdyt"];
+					$paastetyt = $season["paastetyt"] + $season["luovutukset"]*5;
+					
+					$t_kausi = $season["kausi"];
+					$t_ottelut = $voitot + $tasapelit + $tappiot;
+					$t_pisteet = $season["pisteet"];
+					
+					if ($t_pisteet != 0 & $t_ottelut != 0){
+						$pistott = $t_pisteet / $t_ottelut;
+					}
+					else {
+						$pistott = 0;
+					}
+					
+					$t_pistott = number_format($pistott, 2);
+					
+					$maaliero = $tehdyt - $paastetyt;
+					
+					if($season["sijoitus"] == "0"){ $season["sijoitus"] = "?"; }
+					$t_sijoitus = $season["sijoitus"] . ".";
+					
+					if($maaliero > 0){ $t_maaliero = '<span class="green">+'.$maaliero.'</span>'; }
+					if($maaliero < 0){ $t_maaliero = '<span class="red">'.$maaliero.'</span>'; }
+					if($maaliero == 0){ $t_maaliero = '<span class="blue">'.$maaliero.'</span>'; }
+				
+				
+				
+				
+					$columns = array($t_kausi, $t_ottelut, $voitot, $tasapelit, $tappiot, $tehdyt, $paastetyt, $t_pisteet, $t_maaliero, $t_pistott, $t_sijoitus);
+					print_row_for_table($columns, $column_options);
+					$previous_league = $season["nimi"];
+				}
+				echo("</table>");
+			}
+			
+			
+			if($history['playoffsSeasonStatistics']) {
+			
+				?>
+				<h5>Playoffs- ja karsintatilastot</h5>
+				<?php
+				foreach($history['playoffsSeasonStatistics'] as $name => $playoffs) {
+				?>
+					<table class="jeah" width="400">
+					<tr>
+						<th colspan="10" align="center"><?php echo $name ?></th>
+					</tr>
+					<tr>
+						<th width="24%">&nbsp;</th>
+						<th width="10%">ott</th>
+						<th width="9%">v</th>
+						<th width="9%">t</th>
+						<th width="9%">h</th>
+						<th width="12%">tm</th>
+						<th width="12%">pm</th>
+						<th width="15%">maaliero</th>
+					</tr>
+					
+					<?php
+					
+					$column_options = array("", "", "", "", "", "", "");
+					$columns = array("yhteensä", $playoffs['matches'], $playoffs['wins'], $playoffs['ties'], $playoffs['loses'], $playoffs['scored'], $playoffs['againstScored'], $playoffs['goalDifference']);
+					print_row_for_table($columns, $column_options);
+					echo("</table>");
+				}
+				
+			}
+				
+		?>
 	</div>
 	<div id="tabs-3">
 		<?php
 			echo "<table width=\"100%\" class=\"lehdisto\">";
-			$pressReleases = $_REQUEST["teamPressReleases"];
+			$pressReleases = unserialize($_REQUEST["teamPressReleases"]);
 			if (!$pressReleases){
 				echo "Joukkue ei ole jättänyt lehdistötiedotteita.<br><br>";
 			}
 			
 			foreach($pressReleases as $pressRelease){
-				$pressRelease = unserialize($pressRelease);
+				$pressRelease = $pressRelease;
 				$id = $pressRelease->__get("id");
 				$timestamp = $pressRelease->__get("time");
 				$header = str_replace(" ", "&nbsp;", $pressRelease->__get("header"));
@@ -213,35 +339,24 @@ echo "</table><br clear=\"left\"><br>";
 
 
 
-function tulostaPorssi($joukkueID, $stID, $kau){
-	$t_optiot = array("", "", " align=\"center\"", " align=\"center\"", " align=\"center\"", " align=\"center\"", " align=\"center\""," align=\"center\"");
-
-    $porssi = sql("SELECT pelaaja.nimi AS nimi, pelaaja.pelaajaID, 
-                      SUM(ottelut) AS ot, SUM(maalit) AS ma, SUM(syotot) AS sy, SUM(maalit)+SUM(syotot) AS pt,
-                      (SUM(maalit)+SUM(syotot))/SUM(ottelut) AS pperot, maaliero                         
-               FROM pelaaja, tehotilasto
-               WHERE pelaaja.pelaajaID = tehotilasto.pelaajaID
-               AND tehotilasto.joukkueID = $joukkueID
-               AND sarjatilastoID = $stID
-               GROUP BY pelaaja.pelaajaID
-               ORDER BY pt DESC, ma DESC, ot, nimi");
+function printStatsPerCompetition($statsRows){
     
-    if (mysql_num_rows($porssi) > 0){
+    if ($statsRows > 0){
     	?>
 		<table class="statistics" width="100%">
      	<tr>
-		<th width="5%" class="left">#</a></th>
-     	<th width="26%" class="left">pelaaja</a></th>
-     	<th width="10%">ottelut</a></th>
-     	<th width="10%">maalit</a></th>
-     	<th width="10%">syötöt</a></th>
-     	<th width="10%">pisteet</a></th>
-     	<th width="11%">pist/ott</a></th>
-		<th width="10%">+/-</a></th>
+		<th width="5%" class="left">#</th>
+     	<th width="26%" class="left">pelaaja</th>
+     	<th width="10%">ottelut</th>
+     	<th width="10%">maalit</th>
+     	<th width="10%">syötöt</th>
+     	<th width="10%">pisteet</th>
+     	<th width="11%">pist/ott</th>
+			<th width="10%">+/-</th>
     	</tr>
 <?php
 		$i = 1;
-		while ($rivi = mysql_fetch_assoc($porssi)){
+		foreach ($statsRows as $rivi){
 			$pelaajaID = $rivi["pelaajaID"];
         	$nimi = $rivi["nimi"];
 		
@@ -260,8 +375,9 @@ function tulostaPorssi($joukkueID, $stID, $kau){
 		
 
 		$t_rivi = array($i.".", $t_pelaaja, $rivi["ot"], $rivi["ma"], $rivi["sy"], $rivi["pt"], $pperot, $maalierot);
+		$t_optiot = array("", "", ' align="center"', ' align="center"', ' align="center"', ' align="center"', ' align="center"', ' align="center"');
 		
-		taulukkorivi($t_rivi, 8, $t_optiot);
+		print_row_for_table($t_rivi, $t_optiot);
 
 		$i++;
 		}
@@ -270,42 +386,13 @@ function tulostaPorssi($joukkueID, $stID, $kau){
 	return 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function tulostaOttelut($joukkueID, $joukkue, $stID, $vaihe, $kau, $sb, $tulostusjuttu){
-global $id;
-
-	$t_optiot = array("", "", " align=\"center\"", " align=\"center\"");
+function printMatches($team, $stID, $vaihe, $seasonId, $tulostusjuttu, $matches){
 	
 	?>
 	<table class="statistics" width="100%">
      <tr>
     <?php
-    if ($vaihe == 'rs'){
+  if ($vaihe == 'rs'){
     	?>
 		<th width="77" class="left">pvm</th>
  		<th class="left">ottelu</th>
@@ -323,7 +410,7 @@ global $id;
      </tr>
 	
 	<?php
-	if ($sb == "0" || $vaihe == 'pp'){
+	/*if ($sb == "0" || $vaihe == 'pp'){
 		$ottelut = sql("SELECT otteluID, kotiID, vierasID, kotimaalit, vierasmaalit, pvm, 
 		                       DATE_FORMAT(pvm,'%d.%m.%Y') AS pvm2, luovutusvoitto
                         FROM ottelu
@@ -338,38 +425,40 @@ global $id;
                         WHERE (kotiID = $joukkueID OR vierasID = $joukkueID)
                         AND ottelu.sarjatilastoID = $stID
                         ORDER BY ot, pvm DESC, aika DESC, otteluID DESC");
-	}
-                         
-	while ($rivi = mysql_fetch_assoc($ottelut)){
+	}*/
+     
+		 
+	foreach($matches as $match) {
 		$tehdyt = 0;
 		$paastetyt = 0;
-		$kotiID = $rivi["kotiID"];
-		$vierasID = $rivi["vierasID"];
-		$otteluID = $rivi["otteluID"];
+		$kotiID = $match->__get("homeTeam")->__get("id");
+		$vierasID = $match->__get("visitorTeam")->__get("id");
+		$otteluID = $match->__get("id");
 		
-		if ($rivi["luovutusvoitto"] == 'koti'){
-			$rivi["kotimaalit"] = 5;
-			$rivi["vierasmaalit"] = 0;
+		if ($match->__get("walkover") == 'koti'){
+			$match->__set("homeTeamGoals", 5);
+			$match->__set("visitorTeamGoals", 0);
 		}
-		if ($rivi["luovutusvoitto"] == 'vieras'){
-			$rivi["kotimaalit"] = 0;
-			$rivi["vierasmaalit"] = 5;
+		else if ($match->__get("walkover") == 'vieras'){
+			$match->__set("homeTeamGoals", 0);
+			$match->__set("visitorTeamGoals",5);
 		}
 
-		if ($kotiID == $joukkueID){
-			$vhaku = sql("SELECT nimi, joukkueID FROM joukkue WHERE joukkueID = $vierasID");
-			$tehdyt = $rivi["kotimaalit"];
-			$paastetyt = $rivi["vierasmaalit"];
+		if ($kotiID == $team->__get('id')){
+			$vastus = $match->__get("visitorTeam")->__get("name");
+			$vastusID = $match->__get("visitorTeam")->__get("id");
+			$tehdyt = $match->__get("homeTeamGoals");
+			$paastetyt = $match->__get("visitorTeamGoals");
 		}
 		else {
-			$vhaku = sql("SELECT nimi, joukkueID FROM joukkue WHERE joukkueID = $kotiID");
-			$tehdyt = $rivi["vierasmaalit"];
-			$paastetyt = $rivi["kotimaalit"];
+			$vastus = $match->__get("homeTeam")->__get("name");
+			$vastusID = $match->__get("homeTeam")->__get("id");
+			$tehdyt = $match->__get("visitorTeamGoals");
+			$paastetyt = $match->__get("homeTeamGoals");
 		}
-	
-		$vastus = mysql_result($vhaku, 0, 0);
-		$vastusID = mysql_result($vhaku, 0, 1);
 
+		$joukkueID = $team->__get("id");
+		$joukkue = $team->__get("name");
 		if($kotiID == $joukkueID) {
 			$t_ottelu = "".logosmall($joukkueID)."$joukkue - ".logosmall($vastusID)."<a href=\"/tilastot/?tilasto=joukkue&id=$vastusID&kausi=$kau\">$vastus</a>";
 			if($tehdyt > $paastetyt) {
@@ -397,13 +486,14 @@ global $id;
 
 		$t_tilastot = "<a href=\"/tilastot/?tilasto=ottelu&id=$otteluID&kausi=$kau\">tilastot</a>";
 
-		$t_rivi = array($rivi["pvm2"], $t_ottelu, $t_tulos, $t_tilastot);
-		
-		taulukkorivi($t_rivi, 4, $t_optiot);	
+		$t_optiot = array("", "", " align=\"center\"", " align=\"center\"");
+		$t_rivi = array($match->__get("date"), $t_ottelu, $t_tulos, $t_tilastot);
+		//echo("<tr><td>{$match->__get("date")}</td><td>{$t_ottelu}</td><td>{$t_tulos}</td><td>{$t_tilastot}</td></tr>");
+		print_row_for_table($t_rivi, $t_optiot);	
 	}
-	echo "<!--</table><br><br>\n-->";
+	echo "</table><br><br>\n";
 	
-if($tulostusjuttu == "Liiga" or $tulostusjuttu == "1. Divari" or $tulostusjuttu == "2. Divari" or $tulostusjuttu == "5vs5-liiga"){
+/*if($tulostusjuttu == "Liiga" or $tulostusjuttu == "1. Divari" or $tulostusjuttu == "2. Divari" or $tulostusjuttu == "5vs5-liiga"){
 
 	$t_optiot = array("", "", " align=\"center\"", " align=\"center\"");
 	
@@ -463,7 +553,6 @@ while ($r = mysql_fetch_assoc($q)){
 	
 }
 
-//
 
 $q = mysql_query("SELECT * FROM rstilasto WHERE sarjatilastoID='".$sarjatilasto."' AND `joukkueID` NOT LIKE '".$joukkue2."' ".$lohkoehto."");		
 while ($r = mysql_fetch_assoc($q)){
@@ -489,9 +578,10 @@ $ottelujuttu = ''.logosmall($r2["joukkueID"]).'<a href="/tilastot/?tilasto=joukk
 }
 			
 echo '</table>';
-}}}}
+}*/}
+
 ?>
-			</pre>
+			
 		</div>
 	</div>
 <?php

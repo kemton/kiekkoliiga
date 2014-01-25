@@ -19,7 +19,7 @@ class PageAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($page);
+		return $page;
 	}
 	
 }

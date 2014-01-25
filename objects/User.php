@@ -5,6 +5,7 @@ class User {
 	private $isAdmin; // Site administrator
 	private $player; // if user have player profile
 	private $isReferee;
+	private $kiekkoPlayer;
 	
 	function __construct($id, $name, $isAdmin) {
 		$this->__set('id', $id);

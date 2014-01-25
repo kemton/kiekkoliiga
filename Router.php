@@ -11,10 +11,11 @@ class Router {
 
 	function __construct() {
 		// Debug
-		if (debug_mode == true)
-			echo "<span style=\"color:red\">Method: " . __METHOD__ . ", Line: " . __LINE__ . "</span><br />\n";
+		/*if (debug_mode == true)
+			echo "<span style=\"color:red\">Method: " . __METHOD__ . ", Line: " . __LINE__ . "</span><br />\n";*/
 		// All pages
 		$this->pages = array(
+		"authPage" => "auth.php",
 		"homePage" => "home.php",
 		"statisticsPage" => "statistics.php",
 		"exceptionPage" => "exception.php",
@@ -39,7 +40,6 @@ class Router {
 		"reportPage" => "report.php",
 		"error404Page" => "error404.php",
 		"boardInfoPage" => "board-info.php",
-		"reportPage" => "report.php",
 		"pagePage" => "page.php",
 		"rulesPage" => "rules.php",
 		"leagueStatsPage" => "leaguestats.php",
@@ -47,15 +47,23 @@ class Router {
 		"unityPage" => "unity.php",
 		"kiekkotkStatsPage" => "kiekkotk_stats.php",
 		"uploadPage" => "upload.php",
-		"uploadMatchPage" => "upload_match.php"
+		"uploadMatchPage" => "upload_match.php",
+		"addMatchPage" => "addmatch.php",
+		"searchPlayerPage" => "searchplayer.php",
+		"searchTeamPage" => "searchteam.php",
+		"userPage" => "user.php",
+		"authPage" => "auth.php",
+		"deadlinePage" => "deadlines.php",
+		"transfersPage" => "transfers.php"
 		);
 
 		// All controllers
 		$this->actions = array(
 		"archives" => ArchivesController,
+		"auth" => AuthController,
 		"board" => BoardController,
 		"board-info" => BoardInfoController,
-		"deadline" => DeadlineController,
+		"deadlines" => DeadlineController,
 		"feedback" => FeedbackController,
 		"home" => HomePageController,
 		"http-error" => HttpErrorController,
@@ -67,11 +75,13 @@ class Router {
 		"statistics" => StatisticsController,
 		"team" => TeamPageController,
 		"teams" => TeamsController,
+		"transfers" => TransfersController,
 		"PageController" => PageController,
 		"rules" => PageController,
 		"hall-of-fame" => PageController,
 		"unity" => UnityController,
-		"upload" => UploadController
+		"upload" => UploadController,
+		"user" => UserController
 		);
 	}
 
@@ -85,16 +95,17 @@ class Router {
 			$id = $_REQUEST["season"];
 			$seasonController = new SeasonController();
 			$season = $seasonController->getSeasonById($id);
-			$_SESSION["season"] = $season;
+			$_SESSION["season"] = serialize($season);
 		}
 		// Set season if is not set before
 		if (!isset($_SESSION["season"])) {
 			$seasonController = new SeasonController();
 			$season = $seasonController->getCurrentSeason();
-			$_SESSION["season"] = $season;
+			$_SESSION["season"] = serialize($season);
 		}
 		
-		$this->nextController(null, 'deadline');
+		$deadlineController = new DeadlineController();
+		$deadlineController->getFirst();
 		
 		if ($action == 'ajax'){ include(viewDir . $action . "/" . $controller[1]); return null; }
 		// if smf logged in
@@ -137,7 +148,6 @@ class Router {
 		} else {
 			$viewPath = viewDir . $folderAppend . $target;
 		}
-		
 		return $viewPath;
 	}
 

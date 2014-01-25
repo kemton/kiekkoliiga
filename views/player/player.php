@@ -5,7 +5,7 @@ include_once (incDir."/leftbar.php");
 include_once (incDir."/statisticsbar.php");
 
 $player = unserialize($_REQUEST["playerStats"]);
-$team = unserialize($player->__get("team"));
+$team = $player->__get("team");
 ?>
 <div id="content">
 	<div class="box">
@@ -30,11 +30,11 @@ if ($previousNames) {
 echo "<a href=\"/player/{$player->__get("name")}/achievements\">Saavutukset</a>";
 
 /**** Achievements ****/
-$achievements = unserialize($player->__get('achievements'));
+$achievements = $player->__get('achievements');
 if ($achievements <> NULL) {
 	echo "<h4>Saavutukset:</h4>";
 	foreach ($achievements as $ach) {
-		$season = unserialize($ach->__get('season'));
+		$season = $ach->__get('season');
 		echo "{$season->__get('name')} - {$ach->__get('name')} joukkueessa {$ach->__get('team')}<br />";
 	}
 }
@@ -43,7 +43,7 @@ if ($achievements <> NULL) {
 
 <?php
 /**** Rangaistukset ****/
-$user = $_SESSION["user"];
+$user = unserialize($_SESSION["user"]);
 if (!empty($_REQUEST["playerSuspensions"]) && $user->isAdmin()) {
 	echo "<h4>Rangaistukset:</h4>";
 	foreach ($_REQUEST["playerSuspensions"] as $value) {
@@ -64,10 +64,10 @@ if (!empty($_REQUEST["playerSuspensions"]) && $user->isAdmin()) {
 	<tbody>
 <?php
 $i=0;
-$playerStatsPerSeason = unserialize($player->__get('statsPerSeason'));
+$playerStatsPerSeason = $player->__get('statsPerSeason');
 foreach ($playerStatsPerSeason as $stats) {
-	$season = unserialize($stats->__get('season'));
-	$team = unserialize($stats->__get('team'));
+	$season = $stats->__get('season');
+	$team = $stats->__get('team');
 	
 	if ($i%2 == 1) {
 		echo "<tr class=\"even\">";
@@ -103,7 +103,7 @@ foreach ($playerStatsPerSeason as $stats) {
 
 <!-- Yhteistilastot -->
 <h4>Yhteistilastot:</h4>
-<table class="jeah" width="1%">
+<table class="jeah" width="70%">
 	<thead>
 		<tr>
 			<th>sarja</th><th>ottelut</th><th>maalit</th><th>+</th><th>syötöt</th><th>=</th><th>pisteet</th>
@@ -112,7 +112,7 @@ foreach ($playerStatsPerSeason as $stats) {
 	<tbody>
 <?php
 $i=0;
-$totalStats = unserialize($player->__get('leagueTotalStats'));
+$totalStats = $player->__get('leagueTotalStats');
 foreach ($totalStats as $stats) {
 	if ($i%2 == 1) {
 		echo "<tr class=\"even\">";
@@ -154,9 +154,8 @@ echo "<tr>
 	<tbody>
 <?php
 $i=0;
-$lastMatches = unserialize($player->__get('lastMatches'));
+$lastMatches = $player->__get('lastMatches');
 foreach ($lastMatches as $match) {
-	$match = unserialize($match);
 	
 	if ($i%2 == 1) {
 		echo "<tr class=\"even\">";
@@ -164,16 +163,15 @@ foreach ($lastMatches as $match) {
 		echo "<tr class=\"odd\">";
 	}
 	
-	$homeTeam = unserialize($match->__get('homeTeam'));
+	$homeTeam = $match->__get('homeTeam');
 	$homeTeamLogo = logosmall($homeTeam->__get('id'));
 	
-	$visitorTeam = unserialize($match->__get('visitorTeam'));
+	$visitorTeam = $match->__get('visitorTeam');
 	$visitorTeamLogo = logosmall($visitorTeam->__get('id'));
 	
 	// Haetaan kumpi joukkueista on pelaajan
 	$homeTeamPlayersList = $homeTeam->__get('players');
 	foreach ($homeTeamPlayersList as $homeTeamPlayer) {
-		$homeTeamPlayer = unserialize($homeTeamPlayer);
 		if ($homeTeamPlayer->__get('id') == $player->__get("id")) {
 			$matchPlayerTeamId = $homeTeam->__get('id');
 		}
@@ -192,10 +190,9 @@ foreach ($lastMatches as $match) {
 	$playerPlusMinus=0;
 	$playerTeam=0;
 	$check = true;
-	$homeTeamMatchPlayersList = unserialize($match->__get('homeTeamMatchPlayers'));
+	$homeTeamMatchPlayersList = $match->__get('homeTeamMatchPlayers');
 	foreach ($homeTeamMatchPlayersList as $homeTeamMatchPlayer) {
-		$homeTeamMatchPlayer = unserialize($homeTeamMatchPlayer);
-		$homeTeamPlayer = unserialize($homeTeamMatchPlayer->__get('player'));
+		$homeTeamPlayer = $homeTeamMatchPlayer->__get('player');
 		
 		if ($homeTeamPlayer->__get('id') == $player->__get('id')) {
 			$playerGoals = $homeTeamMatchPlayer->__get('goals');
@@ -207,10 +204,10 @@ foreach ($lastMatches as $match) {
 		}
 	}
 	if ($check == true) {
-		$visitorTeamMatchPlayersList = unserialize($match->__get('visitorTeamMatchPlayers'));
+		$visitorTeamMatchPlayersList = $match->__get('visitorTeamMatchPlayers');
 		foreach ($visitorTeamMatchPlayersList as $visitorTeamMatchPlayer) {
-			$visitorTeamMatchPlayer = unserialize($visitorTeamMatchPlayer);
-			$visitorTeamPlayer = unserialize($visitorTeamMatchPlayer->__get('player'));
+			$visitorTeamMatchPlayer = $visitorTeamMatchPlayer;
+			$visitorTeamPlayer = $visitorTeamMatchPlayer->__get('player');
 			
 			if ($visitorTeamPlayer->__get('id') == $player->__get('id')) {
 				$playerGoals = $visitorTeamMatchPlayer->__get('goals');
@@ -273,8 +270,58 @@ foreach ($lastMatches as $match) {
 ?>
 	</tbody>
 </table>
-			
-			
+
+<?php
+$kiekkoPlayer = $player->__get('kiekkoPlayer');
+if (!$kiekkoPlayer->__get('hideStats')) {
+?>
+<!-- Kiekkotilastot -->
+<h4>Kiekko.tk tilastot:</h4>
+<table class="jeah" width="70%">
+	<thead>
+		<tr>
+			<th>joukkue</th><th>maalit</th><th></th><th>syötöt</th><th></th><th>yhteensä</th><th>+/-</th>
+		</tr>
+	</thead>
+	<tbody>
+<?php
+$i=0;
+$totalGoals=0;
+$totalAssists=0;
+$totalPoints=0;
+$totalPlusminus=0;
+foreach ($kiekkoPlayer->__get('kiekkoPlayerStats') as $stats) {
+	if ($i%2 == 1) {
+		echo "<tr class=\"even\">";
+	} else {
+		echo "<tr class=\"odd\">";
+	}
+	
+	echo "
+		<td>{$stats->getTeamName($stats->__get('team'))}</td>
+		<td>{$stats->__get('goals')}</td>
+		<td>+</td>
+		<td>{$stats->__get('assists')}</td>
+		<td>=</td>
+		<td>{$stats->__get('points')}</td>
+		<td>{$stats->__get('plusminus')}</td>";
+	echo "</tr>";
+	$totalGoals += $stats->__get('goals');
+	$totalAssists += $stats->__get('assists');
+	$totalPoints += $stats->__get('points');
+	$totalPlusminus += $stats->__get('plusminus');
+	$i++;
+}
+
+echo "<tr>
+		<td>(yhteensä)</td><td>{$totalGoals}</td><td>+</td><td>{$totalAssists}</td><td>=</td><td>{$totalPoints}</td><td>{$totalPlusminus}</td>
+	</tr>";
+?>
+	</tbody>
+</table>
+<!-- Kiekkotilastot loppuu -->
+
+<?php } ?>
 		</div>
 	</div>
 <?php

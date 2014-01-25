@@ -18,24 +18,6 @@ include("functionInclude.php");
 	<link rel="stylesheet" href="/css/jquery-ui-1.8.22.custom.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="/css/themes/blue/style.css" type="text/css" media="all" />
 	
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="/js/auroramenu.js"></script>
-	<script type="text/javascript" src="/js/jquery.cookie.js"></script>
-	<script type="text/javascript" src="/js/addComment.js"></script>
-	
-	<script>
-		$(function() {
-			$( "#resizable" ).resizable({
-				handles: "se"
-			});
-		});
-		
-		$(function() {
-			$( "#tabs" ).tabs();
-		});
-	</script>
-	
 	<meta property="og:site_name" content="Kiekkoliiga.net"/>
 	<meta property="og:title" content="Kiekkoliiga.net"/>
 	<meta property="og:type" content="website"/>
@@ -46,7 +28,7 @@ include("functionInclude.php");
 	<!-- © Kiekkoliiga 2004-<?php echo date("Y"); ?> -->
 
 	<script type="text/javascript">
-		<!--
+		/*<!--
 		var unityObjectUrl = "http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js";
 		if (document.location.protocol == 'https:')
 			unityObjectUrl = unityObjectUrl.replace("http://", "https://ssl-");
@@ -110,7 +92,7 @@ include("functionInclude.php");
 			height: 600px;
 			width: 960px;
 		}
-		-->
+		-->*/
 		</style>
 </head>
 
@@ -122,11 +104,12 @@ include("functionInclude.php");
 				<?php
 					$dl = unserialize($_REQUEST["deadline"]);
 					$deadlineName = $dl->__get("name");
-					$timestamp = $dl->__get("deadline");
+					$timestamp = $dl->__get("ends");
 					$deadline = date_parse($timestamp);
 					$timeToDeadline = timeToDeadline($deadline["day"], $deadline["month"], $deadline["year"], $deadline["hour"]);
 					echo("{$deadlineName} deadlineen: {$timeToDeadline}");
 				?>
+				| <a href="/siirrot">Siirrot</a>
 			</div>
 			<div id="login">
 				<?php include_once("login.php"); ?>

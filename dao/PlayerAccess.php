@@ -135,11 +135,14 @@ class PlayerAccess extends DatabaseAccess {
 							FROM kiellot WHERE kiellot.nimi = :playerName";
 	private $GET_PLAYER_ID_BY_FORUM_ID = "SELECT pelaajaID FROM auth WHERE id_member = :forumId LIMIT 1";
 	private $GET_FORUM_ID_BY_PLAYER_ID = "SELECT id_member FROM auth WHERE pelaajaID = :playerId LIMIT 1";
-	private $GET_PLAYER_BY_USER_ID = "SELECT auth.id_auth, auth.id_member, auth.pelaajaID, auth.name, auth.id_kiekko, auth.created, auth.exp, auth.updated FROM auth WHERE id_member = :memberId";
 	private $IS_USER_REFEREE = "SELECT smf_members.tuomari FROM smf_members WHERE id_member = :memberId";
 	private $GET_IS_BOARD_BY_FORUM_ID = "SELECT COUNT(*) AS isBoard FROM smf_members WHERE id_member = :forumId AND id_group = 1";
 	private $GET_FORUM_NAME_BY_FORUM_ID = "SELECT member_name FROM smf_members WHERE id_member = :forumId LIMIT 1";
-	private $SEARCH_PLAYER ="SELECT pelaajaID FROM pelaaja WHERE nimi LIKE '%:playerName%' LIMIT 20";
+	private $SEARCH_PLAYER ="SELECT pelaajaID FROM pelaaja WHERE nimi LIKE :playerName OR entiset LIKE :playerName LIMIT 20";
+	private $ADD_PLAYER_TO_TEAM = "UPDATE pelaaja SET joukkueID = :teamId, vastuuhklo = 0, ollut_vh = 0 WHERE pelaajaID = :playerId LIMIT 1";
+	private $REMOVE_PLAYER_FROM_TEAM = "UPDATE pelaaja SET joukkueID = 0, vastuuhklo = 0, ollut_vh = 0 WHERE pelaajaID = :playerId LIMIT 1";
+	private $MAKE_VH = "UPDATE pelaaja SET vastuuhklo = 1, ollut_vh = 1 WHERE pelaajaID = :playerId LIMIT 1";
+	private $REMOVE_VH = "UPDATE pelaaja SET vastuuhklo = 0 WHERE pelaajaID = :playerId LIMIT 1";
 	
 	function __construct() {
 		try {
@@ -175,7 +178,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($player);
+		return $player;
 	}	
 	
 	public function getPlayerByForumId($forumId) {
@@ -191,7 +194,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($player);
+		return $player;
 	}
 	
 	public function getPlayerByName($playerName) {
@@ -210,13 +213,13 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($player);
+		return $player;
 	}
 	
 	public function getPlayerStatsByName($playerName) {
 		try {
 			/* kemton: Hämärä kohta, katsottava uusiksi, nopeasti tehty!! */
-			$player = unserialize($this->getPlayerByName($playerName));
+			$player = $this->getPlayerByName($playerName);
 			$id = $player->__get("id");
 			$name = $player->__get('name');
 			$team = $player->__get('team');
@@ -240,13 +243,15 @@ class PlayerAccess extends DatabaseAccess {
 			$lastMatches = $this->getPlayerLastMatchesByName($playerName);
 			$playerStats->__set('lastMatches', $lastMatches);
 			
-			//echo "<pre>";
-			//print_r(unserialize($playerStats->__get('lastMatches')));
-			//echo "</pre>";
+			$kiekkoAccess = new KiekkoAccess();
+			$kiekkoPlayer = $kiekkoAccess->getKiekkoPlayerByPlayerName($playerName);
+			$playerStats->__set('kiekkoPlayer', $kiekkoPlayer);
+			
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($playerStats);
+		
+		return $playerStats;
 	}
 	
 	/*public function getPlayerAchievementsById($playerID) {
@@ -272,7 +277,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($achievementsList);
+		return $achievementsList;
 	}
 	
 	/*public function getPlayerStatsById($playerID) {
@@ -308,7 +313,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($statsList);
+		return $statsList;
 	}
 	/*
 	public function getPlayerTotalStatsById($playerID) {
@@ -338,7 +343,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($statsList);
+		return $statsList;
 	}
 	
 	/*public function getPlayerLastMatchesById($playerID) {
@@ -362,7 +367,7 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($matchList);
+		return $matchList;
 	}
 	
 	/*public function getPlayerSuspensionsById($playerID) {
@@ -381,17 +386,6 @@ class PlayerAccess extends DatabaseAccess {
 			throw $e;
 		}
 		return $key;
-	}
-	
-	public function getPlayerIdByUserId($userId) {
-		try {
-			$key = parent::executeStatement($this->GET_PLAYER_BY_USER_ID, array(":memberId" => $userId));
-			if (empty($key)) { throw new Exception('User not found');}
-			$playerId = $key[0]["pelaajaID"];
-		} catch (Exception $e) {
-			throw $e;
-		}
-		return $playerId;
 	}
 	
 	public function isUserReferee($memberId) {
@@ -443,13 +437,19 @@ class PlayerAccess extends DatabaseAccess {
 		return $isBoard;
 	}
 	
-	public function getLoggedInUser($id, $username, $isAdmin) {
+	public function getLoggedInUser($forumId, $username, $isAdmin) {
 		try {
-			$user = new User($id, $username, $isAdmin);
-			$isReferee = $this->isUserReferee($id);
+			$authAccess = new AuthAccess();
+			
+			$user = new User($forumId, $username, $isAdmin);
+			
+			$isReferee = $this->isUserReferee($forumId);
 			$user->__set('isReferee', $isReferee);
 			
-			$playerId = $this->getPlayerIdByUserId($id);
+			$auth = $authAccess->getAuthByForumId($forumId);
+			$user->__set('auth', $auth);
+			
+			$playerId = $auth->__get('playerId');
 			if ($playerId <> 0) {
 				$player = $this->getPlayerById($playerId);
 				$user->__set('player', $player);
@@ -457,12 +457,12 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($user);
+		return $user;
 	}
 
 	public function searchPlayer($key) {
 		try {
-			$result = parent::executeStatement($this->SEARCH_PLAYER, array(":playerName" => $key));
+			$result = parent::executeStatement($this->SEARCH_PLAYER, array("playerName" => "%{$key}%"));
 			$playerList = array();
 			foreach ($result as $value) {
 				$player = $this->getPlayerById($value["pelaajaID"]);
@@ -471,8 +471,23 @@ class PlayerAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($playerList);
+		return $playerList;
+	}
+	
+	public function addPlayerToTeam($playerId, $teamId) {
+		parent::updateStatement($this->ADD_PLAYER_TO_TEAM, array(":playerId" => $playerId, ":teamId" => $teamId));
+	}
+	
+	public function removePlayerFromTeam($playerId) {
+		parent::updateStatement($this->REMOVE_PLAYER_FROM_TEAM, array(":playerId" => $playerId));
 	}
 
+	public function makeVh($playerId) {
+		parent::updateStatement($this->MAKE_VH, array(":playerId" => $playerId));
+	}
+	
+	public function removeVh($playerId) {
+		parent::updateStatement($this->REMOVE_VH, array(":playerId" => $playerId));
+	}
 }
 ?>

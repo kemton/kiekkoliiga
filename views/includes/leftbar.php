@@ -9,6 +9,23 @@
 				</div>
 			</div>
 	-->
+	<div class="box borderbottom">
+		<div class="top">
+			<div class="padding">Mainos</div>
+		</div>
+		<div class="ad center">
+			<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-8676090212108942";
+			/* Kiekkoliiga mainos*/
+			google_ad_slot = "5112082564";
+			google_ad_width = 200;
+			google_ad_height = 200;
+			//-->
+			</script>
+			<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+		</div>
+	</div>
+
 	<div class="box">
 		<ul class="menu auroramenu">
 			<li>
@@ -64,7 +81,7 @@
 					<li>
 						<div class="content">
 							<?php
-							$comments = $_REQUEST["lastComment"];
+							$comments = unserialize($_REQUEST["lastComment"]);
 							echo("<ul>");
 							foreach ($comments as $comment) {
 								echo("<small>{$comment['time']} - ");

@@ -37,17 +37,18 @@ if(!isset($_SESSION["user"]))
 		<?php
 		$user = unserialize($_SESSION["user"]); // User Object
 		
+		
 		// user has player profile?
 		if ($user->__get('player') <> NULL) {
-			$player = unserialize($user->__get('player'));
+			$player = $user->__get('player');
 			// player profile has team?
 			if ($player->__get('team') <> NULL) {
-				$team = unserialize($player->__get('team'));
+				$team = $player->__get('team');
 			}
 		}
 		
 		if ($player != NULL) {
-			echo '<strong><a href="/player/'.$user->__get('name').'">'.$user->__get('name').'</a></strong>';
+			echo '<strong><a href="/player/'.$user->__get('name').'">' . $user->__get('name') . '</a></strong>';
 			
 			if ($team->__get('id') != NULL) {
 				echo ', <a href="/team/'.$team->__get('name').'">'.logosmall($team->__get('id'), 14, 1).$team->__get('name');
@@ -55,10 +56,18 @@ if(!isset($_SESSION["user"]))
 			}
 			echo '<br />';
 			if ($player->__get('isAdmin')) { echo '<a href="">Joukkuetietojen päivitys</a><br />'; }
-		} else { echo '<strong>'.$user->__get('name').'</strong><br />'; }
+			
+		} else {
+		
+			echo '<strong>'.$user->__get('name').'</strong><br />';
+		
+		}
+		
+		echo '<a href="/user">Käyttäjän asetukset</a><br />';
+		
 		
 		if ($user->__get('isReferee')) { echo '<a href="/upload">Pelin lisääminen</a><br />'; }
-		echo '<a href="/page/forum/index.php?action=logout;' . $context['session_var'] . '=' . $context['session_id'] . '">Kirjaudu ulos</a>';
+		echo '<a href="/forum/index.php?action=logout;' . $context['session_var'] . '=' . $context['session_id'] . '">Kirjaudu ulos</a>';
 		
 		if($player <> NULL){ // user has player profile?
 			if ($player->__get('isAdmin')) {

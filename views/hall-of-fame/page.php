@@ -4,7 +4,7 @@ include_once (incDir."/navigation.php");
 include_once (incDir."/leftbar.php");
 include_once (incDir."/rightbar.php");
 
-$page = unserialize($_REQUEST["pageObject"]);
+$page = $_REQUEST["pageObject"];
 ?>
 <div id="content">
 	<div class="box">

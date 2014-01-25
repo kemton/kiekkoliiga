@@ -28,7 +28,7 @@ include_once (incDir."/statisticsbar.php");
 				$i=1;
 				$standObj = unserialize($_REQUEST["standings"]);
 				foreach ($standObj as $stand) {
-					$team = unserialize($stand->__get('team'));
+					$team = $stand->__get('team');
 					if ($i%2) {
 						echo '<tr class="odd">';
 					} else {

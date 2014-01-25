@@ -5,10 +5,9 @@ class UploadAccess extends DatabaseAccess {
 						FROM upload AS u
 						LEFT JOIN sarjatilasto AS s ON s.sarjatilastoID = u.ottelut
 						ORDER BY uploadID";
-	private $REGULAR_SEASON_UPLOAD_TEAM = "SELECT joukkueID
+	private $REGULAR_SEASON_UPLOAD_TEAM = "SELECT joukkueID, sarjatilastoID
 						FROM joukkuesivu
-						WHERE joukkuesivu.sarjatilastoID = :standingId
-						ORDER BY nimi";
+						WHERE joukkuesivu.sarjatilastoID = :standingId";
 	private $PLAYOFF_UPLOAD_TEAM = "SELECT ppsarjaID, sarjatilastoID, joukkue1ID, joukkue2ID, vaihe
 						FROM ppsarja
 						WHERE sarjatilastoID = :standingId
@@ -19,8 +18,14 @@ class UploadAccess extends DatabaseAccess {
 						LEFT JOIN ppsarja AS pp ON pp.sarjatilastoID = u.ottelut
 						LEFT JOIN sarjatilasto AS s ON s.sarjatilastoID = u.ottelut
 						WHERE uploadID = :uploadId AND pp.ppsarjaID = :pairId";
-	private $ADD_MATCH = "";
-	
+	private $ADD_MATCH = "INSERT INTO ottelu
+						(sarjatilastoID, kotiID, vierasID, kotimaalit, vierasmaalit, tuomari, pvm, aika)
+						VALUES (:league, :homeTeamId, :visitorTeamId, :homeTeamGoals, :visitorTeamGoals, :referee, CURDATE(), CURTIME())";
+	private $ADD_MATCH_PLAYER = "UPDATE tehotilasto SET
+						(joukkueID, ottelut, maalit, syotot, tahdet, maaliero)
+						VALUES (:statsid, :leagueid, :playerid, :teamid, :matches, :goals, :assists, :stars, :plusminus)
+						WHERE sarjatilastoID = :leagueid AND pelaajaID = :playerid";
+
 	public function getAvailableUploads() {
 		try {
 			$uploads = parent::executeStatement($this->GET_AVAILABLE_UPLOADS, array());
@@ -28,7 +33,7 @@ class UploadAccess extends DatabaseAccess {
 			foreach ($uploads as $upload) {
 				if ($leagueAccess->isRegularSeason($upload["tyyppi"])) {
 					$uploadObj = new UploadRegularSeason($upload["uploadID"], $upload["otsikko"], $upload["sarjataulukko"], $upload["ottelut"], $upload["porssi"], $upload["tyyppi"], $upload["nimi"]);
-					$uploadObj->__set('teams', $this->getRegularSeasonLeagueTeams($upload["ottelut"]));
+					$uploadObj->__set('teams', $this->getRegularSeasonLeagueTeams($upload["sarjataulukko"]));
 				} elseif ($leagueAccess->isPlayoffLeague($upload["tyyppi"])) {
 					$uploadObj = new UploadPlayoff($upload["uploadID"], $upload["otsikko"], $upload["sarjataulukko"], $upload["ottelut"], $upload["porssi"], $upload["tyyppi"], $upload["nimi"]);
 					$uploadObj->__set('teams', $this->getPlayoffLeagueTeams($upload["ottelut"]));
@@ -40,21 +45,22 @@ class UploadAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($uploadList);
+		return $uploadList;
 	}
-	
+
 	private function getRegularSeasonLeagueTeams($standingId) {
 		try {
-			$teams = parent::executeStatement($this->REGULAR_SEASON_UPLOAD_TEAM, array('standingId' => $standingsId));
+			$teams = parent::executeStatement($this->REGULAR_SEASON_UPLOAD_TEAM, array('standingId' => $standingId));
 			$teamAccess = new TeamAccess();
 			$teamList = array();
 			foreach ($teams as $row) {
 				$team = $teamAccess->getTeamById($row["joukkueID"]);
-				$teamList[] = $team; 
+				$teamList[] = $team;
 			}
 		} catch (Exception $e) {
 			throw $e;
 		}
+		
 		return $teamList;
 	}
 	
@@ -64,16 +70,15 @@ class UploadAccess extends DatabaseAccess {
 			$teamAccess = new TeamAccess();
 			$teamList = array();
 			foreach ($teams as $row) {
-				$uploadPlayoffTeam = new UploadPlayoffTeam();
-				$uploadPlayoffTeam->__set('id', $row["ppsarjaID"]);
-				$uploadPlayoffTeam->__set('team1', $teamAccess->getTeamById($row["joukkue1ID"]));
-				$uploadPlayoffTeam->__set('team2', $teamAccess->getTeamById($row["joukkue2ID"]));
+				$team1 = $teamAccess->getTeamById($row["joukkue1ID"]);
+				$team2 = $teamAccess->getTeamById($row["joukkue2ID"]);
+				$uploadPlayoffTeam = new UploadPlayoffTeam($row["ppsarjaID"], $team1, $team2);
 				$teamList[] = $uploadPlayoffTeam; 
 			}
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($teamList);
+		return $teamList;
 	}
 	
 	private function initMatchUpload($leagueId, $homeTeamId, $visitorTeamId) {
@@ -93,18 +98,18 @@ class UploadAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($match);
+		return $match;
 	}
 	
 	public function initRegularSeasonMatchUpload($leagueId, $homeTeamId, $visitorTeamId) {
 		try {
-			die('ei valmis');
 			if (!is_numeric($leagueId) || $leagueId == 0) throw new Exception("Invalid league ID");
 			if (!is_numeric($homeTeamId) || $homeTeamId == 0) throw new Exception("Invalid hometeam ID");
 			if (!is_numeric($visitorTeamId) || $visitorTeamId == 0) throw new Exception("Invalid visitingteam ID");
 			
-			$result = parent::executeStatement($this->INIT_MATCH, array("leagueId" => $leagueId, "homeTeamId" => $homeTeamId, "visitorTeamId" => $visitorTeamId));
-			if (count($result) <> 2) throw new Exception("Something went wrong");
+			// Tarkastukset!
+			//$result = parent::executeStatement($this->INIT_MATCH, array("leagueId" => $leagueId, "homeTeamId" => $homeTeamId, "visitorTeamId" => $visitorTeamId));
+			//if (count($result) <> 2) throw new Exception("Something went wrong");
 			$match = $this->initMatchUpload($leagueId, $homeTeamId, $visitorTeamId);
 		} catch (Exception $e) {
 			throw $e;
@@ -142,17 +147,17 @@ class UploadAccess extends DatabaseAccess {
 	}
 	
 	public function addMatch(Match $match) {
-		$return = false;
+		die('addMatch debug');
 		try {
+			parent::beginTransaction();
+			
 			$params = array(
 				"league" => $match->__get('league'),
 				"stage" => $match->__get('stage'),
-				"homeTeam" => $match->__get('homeTeam'),
-				"visitorTeam" => $match->__get('visitorTeam'),
+				"homeTeamId" => $match->__get('homeTeam')->__get('name'),
+				"visitorTeamId" => $match->__get('visitorTeam')->__get('name'),
 				"homeTeamGoals" => $match->__get('homeTeamGoals'),
 				"visitorTeamGoals" => $match->__get('visitorTeamGoals'),
-				"homeTeamMatchPlayers" => $match->__get('homeTeamMatchPlayers'),
-				"visitorTeamMatchPlayers" => $match->__get('visitorTeamMatchPlayers'),
 				"date" => $match->__get('date'),
 				"time" => $match->__get('time'),
 				"referee" => $match->__get('referee'),
@@ -160,13 +165,39 @@ class UploadAccess extends DatabaseAccess {
 				"overtime" => $match->__get('overtime'),
 				"periodStats" => $match->__get('periodStats')
 			);
+			
+			foreach ($match->__get('homeTeamMatchPlayers') as $player) {
+				$this->uploadMatchPlayer($player, $match->__get('league'));
+			}
+			
+			foreach ($match->__get('visitorTeamMatchPlayers') as $player) {
+				$this->uploadMatchPlayer($player, $match->__get('league'));
+			}
+			
 			$result = parent::updateStatement($this->ADD_MATCH, $params);
-			$return = true;
+			parent::commit();
+			
+			return parent::lastInsertId();
+			
 		} catch (Exception $e) {
-			$return = false;
+			parent::rollBack();
 			throw $e;
 		}
-		return $return;
+	}
+	
+	private function uploadMatchPlayer(MatchPlayer $matchPlayer, $leagueid) {
+		try {
+			$params = array(
+				"player" => $matchPlayer->__get('player'),
+				"goals" => $matchPlayer->__get('goals'),
+				"assists" => $matchPlayer->__get('assists'),
+				"plusminus" => $matchPlayer->__get('plusminus'),
+				"leagueid" => $leagueid
+			);
+			$result = parent::updateStatement($this->ADD_MATCH_PLAYER, $params);
+		} catch (Exception $e) {
+			throw $e;
+		}
 	}
 
 }

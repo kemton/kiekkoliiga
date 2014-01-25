@@ -44,7 +44,51 @@ abstract class DatabaseAccess {
 			
 		return $result;
 	}
-
+	
+	public function rowCount($sql, $bind = array()) {
+		try {
+			$stmt = self::$PDOInstance->prepare($sql);
+			$stmt->execute($bind);
+			$result = $stmt->rowCount();
+		} catch (Exception $e) {
+			throw $e;
+		}
+		
+		return $result;
+	}
+	
+	public function beginTransaction() {
+		try {
+			return self::$PDOInstance->beginTransaction();
+		} catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function commit() {
+		try {
+			return self::$PDOInstance->commit();
+		} catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	
+	public function rollBack() {
+		try {
+			return self::$PDOInstance->rollBack();
+		} catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function lastInsertId() {
+		try {
+			return self::$PDOInstance->lastInsertId();
+		} catch (Exception $e) {
+			throw $e;
+		}
+	}
 	
 }
 ?>

@@ -10,8 +10,7 @@
 </div>
 -->
 <?php
-foreach ($_REQUEST["standingsList"] as $value) {
-	$teamList = unserialize($value);
+foreach (unserialize($_REQUEST["standingsList"]) as $teamList) {
 	echo "<div class=\"box\">
 			<div class=\"top\">
 				<div class=\"padding\">Sarjan nimi</div>
@@ -29,7 +28,7 @@ foreach ($_REQUEST["standingsList"] as $value) {
 				<tbody>";
 	$i=0;
 	foreach ($teamList as $stand) {
-		$team = unserialize($stand->__get('team'));
+		$team = $stand->__get('team');
 		
 		if ($stand->__get('goalDifference') > 0) {
 			$goalDifference = "<span class=\"green\">+{$stand->__get('goalDifference')}</span>";
@@ -220,4 +219,35 @@ foreach ($_REQUEST["standingsList"] as $value) {
 
 */
 ?>
+	<div class="box">
+		<ul class="menu auroramenu">
+			<li>
+				<a href="#" class="vframe_title"><div class="padding">Lehdistötiedotteet</div></a>
+				<a style="display: none;" class="aurorashow" href="#"></a>
+				<a style="display: inline;" class="aurorahide" href="#"></a>
+				<ul class="borderbottom"> 
+					<li>
+						<div class="content">
+							<?php
+							foreach (unserialize($_REQUEST["lastTeamnews"]) as $value) {
+								echo "<strong>{$value->__get('writer')}</strong> - {$value->__get('time')}<br />\n";
+								echo "<a href=\"/board-info/{$value->__get('id')}\"><i>{$value->__get('header')}</i></a><br /><br />\n";
+							}
+							?>
+						</div>
+					</li>
+					<!--<li><div class="content bordertop"><a href="">(näytä kaikki)</a></div></li>-->
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div class="box">
+		<ul class="menu auroramenu">
+			<li><a href="#" class="vframe_title"><div class="padding">Paikalla</div></a> <a style="display: none;" class="aurorashow" href="#"></a> <a style="display: inline;" class="aurorahide" href="#"></a>
+				<ul>
+					<li><div class="content matches noborderbottom"><?php ssi_logOnline(); ?></div></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 </div>

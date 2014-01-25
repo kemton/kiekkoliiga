@@ -26,9 +26,8 @@ include_once (incDir."/statisticsbar.php");
 			</tr>
 			<?php
 			$i=1;
-			$standObj = unserialize($_REQUEST["conferenceStanding"]);
-			foreach ($standObj as $stand) {
-				$team = unserialize($stand->__get('team'));
+			foreach (unserialize($_REQUEST["conferenceStanding"]) as $stand) {
+				$team = $stand->__get('team');
 				if ($i%2) {
 					echo '<tr class="odd">';
 				} else {
@@ -81,9 +80,7 @@ include_once (incDir."/statisticsbar.php");
 				<tbody>
 					<?php
 					$i=1;
-					$matches = unserialize($_REQUEST["conferenceMatches"]);
-					
-					foreach ($matches as $match) {
+					foreach (unserialize($_REQUEST["conferenceMatches"]) as $match) {
 						if ($i%2) {
 							echo '<tr class="odd">';
 						} else {
@@ -95,8 +92,8 @@ include_once (incDir."/statisticsbar.php");
 							$isReport = '';
 						}
 						
-						$homeTeam = unserialize($match->__get("homeTeam"));
-						$visitorTeam = unserialize($match->__get("visitorTeam"));
+						$homeTeam = $match->__get("homeTeam");
+						$visitorTeam = $match->__get("visitorTeam");
 						$homeLogo = logosmall($homeTeam->__get("id"));
 						$visitorLogo = logosmall($visitorTeam->__get("id"));
 						

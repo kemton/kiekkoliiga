@@ -26,7 +26,7 @@ class LeagueStageAccess extends DatabaseAccess {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return serialize($stage);
+		return $stage;
 	}
 
 }
