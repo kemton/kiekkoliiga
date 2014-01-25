@@ -20,6 +20,7 @@ class DeadlineController extends Controller {
 			$return = "exceptionPage";
 			throw $e;
 		}
+		
 		return "deadlinePage";
 	}
 	

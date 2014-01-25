@@ -489,7 +489,7 @@ blockquote:before {
 .jeah{ border-collapse: collapse!important; }
 .st{ border-collapse: collapse!important; }
 
-table.statistics tr.odd { background-color: #CED9E0; border-top: 1px solid #b1c0ca; }
+table.statistics tr.odd { background-color: #d6e0e7; border-top: 1px solid #b1c0ca; }
 table.statistics tr.even{ border-top: 1px solid #b1c0ca; }
 
 table.statistics th { background-color: #ced8df; text-align: center; padding: 2px; }
@@ -498,18 +498,3 @@ table.statistics { border: 1px solid #b1c0ca; border-collapse: collapse!importan
 .left { text-align: left!important; }
 .center { text-align: center!important; }
 .right { text-align: right!important; }
-
-
-.ui-widget-content a:link {
- color: rgb(24, 65, 97);
-}
-
-
-.notification {
-	background-color: #B5CCEB;
-	margin: 10px;
-	padding: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-}

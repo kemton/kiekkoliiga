@@ -560,6 +560,8 @@ class StatisticsAccess extends DatabaseAccess {
 				$opponentHomeGameShots = $value["opponentHomeGameShots"];
 				$opponentGuestGameShots = $value["opponentGuestGameShots"];
 				$totalShots = $opponentHomeGameShots + $opponentGuestGameShots;
+				$savesPerMatch = round($saves/$matches, 2);
+				$goalsAgainstPerMatch = round($goalsAgainst/$matches, 2);
 				
 				$savesPerMatch = 0;
 				$goalsAgainstPerMatch = 0;

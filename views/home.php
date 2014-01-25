@@ -28,6 +28,14 @@ include_once (incDir."/rightbar.php");
 			<p>IRC-kanava: #kiekkoliiga @ IRCnet
 		</div>
 	</div>
+	<div class="box">
+		<div class="top">
+			<div class="padding">Kiekossa tapahtunutta</div>
+		</div>
+		<div class="content">
+			<iframe src="http://kiekko.tk:443/eventbox.html?v=2" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
+		</div>
+	</div>
 
 	<?php foreach(unserialize($_REQUEST["lastNews"]) as $key=>$value){ ?>
 	<div class="box">

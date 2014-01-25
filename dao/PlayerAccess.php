@@ -135,6 +135,7 @@ class PlayerAccess extends DatabaseAccess {
 							FROM kiellot WHERE kiellot.nimi = :playerName";
 	private $GET_PLAYER_ID_BY_FORUM_ID = "SELECT pelaajaID FROM auth WHERE id_member = :forumId LIMIT 1";
 	private $GET_FORUM_ID_BY_PLAYER_ID = "SELECT id_member FROM auth WHERE pelaajaID = :playerId LIMIT 1";
+	private $GET_PLAYER_BY_USER_ID = "SELECT auth.id_auth, auth.id_member, auth.pelaajaID, auth.name, auth.id_kiekko, auth.created, auth.exp, auth.updated FROM auth WHERE id_member = :memberId";
 	private $IS_USER_REFEREE = "SELECT smf_members.tuomari FROM smf_members WHERE id_member = :memberId";
 	private $GET_IS_BOARD_BY_FORUM_ID = "SELECT COUNT(*) AS isBoard FROM smf_members WHERE id_member = :forumId AND id_group = 1";
 	private $GET_FORUM_NAME_BY_FORUM_ID = "SELECT member_name FROM smf_members WHERE id_member = :forumId LIMIT 1";
@@ -386,6 +387,17 @@ class PlayerAccess extends DatabaseAccess {
 			throw $e;
 		}
 		return $key;
+	}
+	
+	public function getPlayerIdByUserId($userId) {
+		try {
+			$key = parent::executeStatement($this->GET_PLAYER_BY_USER_ID, array(":memberId" => $userId));
+			if (empty($key)) { throw new Exception('User not found');}
+			$playerId = $key[0]["pelaajaID"];
+		} catch (Exception $e) {
+			throw $e;
+		}
+		return $playerId;
 	}
 	
 	public function isUserReferee($memberId) {
