@@ -10,7 +10,7 @@ class StatisticsController extends Controller {
 			$rightbar = new StatisticsbarController();
 			$rightbar->execute($request);
 			
-			$action = $request[1];
+			$action = @$request[1];
 			if ($action <> NULL) {
 				if (method_exists(get_class($this), $action)) {
 					$return = $this->$action($request);

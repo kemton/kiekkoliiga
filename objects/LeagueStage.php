@@ -10,7 +10,7 @@ class LeagueStage {
 	private $team2Wins;
 	
 
-	function __construct ($id, $stageName, $league, $team1, $team2, $team1Wins, $team2wins) {
+	function __construct ($id, $stageName, $league, $team1, $team2, $team1Wins, $team2Wins) {
 		$this->__set("id", $id);
 		$this->__set("stageName", $stageName);
 		$this->__set("league", $league);

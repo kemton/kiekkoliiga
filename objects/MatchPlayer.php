@@ -6,7 +6,6 @@ class MatchPlayer {
 	private $assists;
 	private $plusminus;
 	
-	
 	function __construct ($player, $goals, $assists, $plusminus) {
 		$this->__set("player", $player);
 		$this->__set("goals", $goals);

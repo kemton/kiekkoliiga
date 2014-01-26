@@ -11,7 +11,7 @@ include_once (incDir."/rightbar.php");
 		</div>
 		<div class="content">
 			<?php
-			if (unserialize($_REQUEST["paitsioArticle"]) != null) {
+			if (isset($_REQUEST["paitsioArticle"])) {
 				$boardInfo = unserialize($_REQUEST["paitsioArticle"]);
 				
 				echo $boardInfo->__get("writer")." - " . $boardInfo->__get("time") . " (luettu: " . $boardInfo->__get("read") . " kertaa)<br />\n";

@@ -59,29 +59,29 @@ class Router {
 
 		// All controllers
 		$this->actions = array(
-		"archives" => ArchivesController,
-		"auth" => AuthController,
-		"board" => BoardController,
-		"board-info" => BoardInfoController,
-		"deadlines" => DeadlineController,
-		"feedback" => FeedbackController,
-		"home" => HomePageController,
-		"http-error" => HttpErrorController,
-		"kiekko-cup" => KiekkoCupController,
-		"login" => LogInController,
-		"paitsio" => PaitsioController,
-		"player" => PlayerController,
-		"report" => ReportController,
-		"statistics" => StatisticsController,
-		"team" => TeamPageController,
-		"teams" => TeamsController,
-		"transfers" => TransfersController,
-		"PageController" => PageController,
-		"rules" => PageController,
-		"hall-of-fame" => PageController,
-		"unity" => UnityController,
-		"upload" => UploadController,
-		"user" => UserController
+		"archives" => "ArchivesController",
+		"auth" => "AuthController",
+		"board" => "BoardController",
+		"board-info" => "BoardInfoController",
+		"deadlines" => "DeadlineController",
+		"feedback" => "FeedbackController",
+		"home" => "HomePageController",
+		"http-error" => "HttpErrorController",
+		"kiekko-cup" => "KiekkoCupController",
+		"login" => "LogInController",
+		"paitsio" => "PaitsioController",
+		"player" => "PlayerController",
+		"report" => "ReportController",
+		"statistics" => "StatisticsController",
+		"team" => "TeamPageController",
+		"teams" => "TeamsController",
+		"transfers" => "TransfersController",
+		"PageController" => "PageController",
+		"rules" => "PageController",
+		"hall-of-fame" => "PageController",
+		"unity" => "UnityController",
+		"upload" => "UploadController",
+		"user" => "UserController"
 		);
 	}
 
@@ -91,7 +91,7 @@ class Router {
 		$action = $controller[0];
 		
 		// Save new season to session
-		if (is_numeric($_REQUEST["season"])) {
+		if (isset($_REQUEST["season"])) {
 			$id = $_REQUEST["season"];
 			$seasonController = new SeasonController();
 			$season = $seasonController->getSeasonById($id);
@@ -154,7 +154,7 @@ class Router {
 	private function nextController($controller, $action) {
 	
 		// Loopping actions while action is null
-		while ($this->actions[$action] != null) {
+		while (@$this->actions[$action] != null) {
 			$actionValue = $this->actions[$action];
 			$action = $this->controllerHandler($controller, $actionValue);
 		}

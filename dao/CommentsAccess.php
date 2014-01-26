@@ -92,7 +92,7 @@ class CommentsAccess extends DatabaseAccess {
 				$deleted = $row['poistettu'];
 				
 				$writerForumId = $row['kirjoittajaID'];
-				$deletedById = $row['poistaja'];
+				$deletedByForumId = $row['poistaja'];
 				
 				$writerObject = $playerAccess->getPlayerByForumId($writerForumId);
 				$deletedByObject = $playerAccess->getPlayerByForumId($deletedByForumId);

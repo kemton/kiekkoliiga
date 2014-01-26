@@ -84,8 +84,9 @@ function bbc($text){
 
 
 function timeToDeadline($day, $month, $year, $hour){
-	
-  $aaika=mktime($hour,0,0,$month,$day,$year)-time();
+
+	$tuloste = "";
+	$aaika=mktime($hour,0,0,$month,$day,$year)-time();
 	if(intval($aaika/31536000) < 0){ 
 		$mennyt = true; 
 	}
@@ -129,7 +130,7 @@ function print_row_for_table($data, $column_option = array()) {
 	else {
 		$parity = 'odd';
 	}
-	echo("<tr class=\"{$parity}{$i}\">\n");
+	echo("<tr class=\"{$parity}{$row_number}\">\n");
 
 	foreach($data as $column) {
 		echo("\t<td" . $column_option[$i] . ">" . $column . "</td>\n");

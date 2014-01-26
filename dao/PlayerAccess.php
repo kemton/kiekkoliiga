@@ -189,7 +189,7 @@ class PlayerAccess extends DatabaseAccess {
 				return $this->getPlayerById($playerId);
 			}
 			$result = parent::executeStatement($this->GET_FORUM_NAME_BY_FORUM_ID, array(":forumId" => $forumId));
-			$name = $result[0]["member_name"];
+			$name = @$result[0]["member_name"];
 			$isBoard = $this->isBoardByForumId($forumId);
 			$player = new Player(0, $name, null, "", false, $isBoard);
 		} catch (Exception $e) {
@@ -224,7 +224,7 @@ class PlayerAccess extends DatabaseAccess {
 			$id = $player->__get("id");
 			$name = $player->__get('name');
 			$team = $player->__get('team');
-			$previousName = $player->__get("previousNames");
+			$previousNames = $player->__get("previousNames");
 			$isAdmin = $player->__get("isAdmin");
 			$isBoard = $player->__get("isBoard");
 			/* ---------------------------------- */
@@ -270,7 +270,7 @@ class PlayerAccess extends DatabaseAccess {
 			$achievementsList = array();
 			$seasonAccess = new SeasonAccess();
 			foreach ($achievementsResult as $value) {
-				$season = $seasonAccess->getSeasonById($value["kausiId"]);
+				$season = $seasonAccess->getSeasonById($value["kausiID"]);
 				$team = $value["nimi"];
 				$achievements = new PlayerAchievements($value["saavutusID"], $season, $team, $value["saavutus"], $value["jaettu"]);
 				$achievementsList[] = $achievements;
@@ -413,7 +413,7 @@ class PlayerAccess extends DatabaseAccess {
 	public function getPlayerIdByForumId($forumId) {
 		try {
 			$key = parent::executeStatement($this->GET_PLAYER_ID_BY_FORUM_ID, array(":forumId" => $forumId));
-			$id = $key[0]["pelaajaID"];
+			$id = @$key[0]["pelaajaID"];
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -423,7 +423,7 @@ class PlayerAccess extends DatabaseAccess {
 	public function getForumIdByPlayerId($playerId) {
 		try {
 			$key = parent::executeStatement($this->GET_FORUM_ID_BY_PLAYER_ID, array(":playerId" => $playerId));
-			$id = $key[0]["id_member"];
+			$id = @$key[0]["id_member"];
 		} catch (Exception $e) {
 			throw $e;
 		}

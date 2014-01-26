@@ -11,8 +11,9 @@ class SeasonAccess extends DatabaseAccess {
 	public function getSeasonById($seasonId) {
 		try {
 			$seasonResult = parent::executeStatement($this->GET_SEASON_BY_ID, array("seasonid" => $seasonId));
-			$id = $seasonResult[0]["kausiID"];
-			$name = $seasonResult[0]["kausi"];
+			$season_data = @$seasonResult[0];
+			$id = $season_data["kausiID"];
+			$name = $season_data["kausi"];
 			
 			$season = new Season($id, $name);
 		} catch (Exception $e) {

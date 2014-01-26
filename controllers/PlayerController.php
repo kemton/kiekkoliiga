@@ -11,7 +11,7 @@ class PlayerController extends Controller {
 			$id = $request[1];
 			$stats = new PlayerAccess();
 			$action = $request[1];
-			$tab = $request[2];
+			$tab = @$request[2];
 			
 			if ($tab <> NULL) {
 				if (method_exists(get_class($this), $tab)) {

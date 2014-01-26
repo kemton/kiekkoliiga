@@ -25,7 +25,7 @@ $team = $player->__get("team");
 echo("<h2>{$player->__get("name")}</h2>");
 $previousNames = $player->__get("previousNames");
 if ($previousNames) {
-	echo "Entiset nickit: " . $previousNames;
+	echo "Entiset nickit: {$previousNames}<br />";
 }
 echo "<a href=\"/player/{$player->__get("name")}/achievements\">Saavutukset</a>";
 
@@ -111,6 +111,10 @@ foreach ($playerStatsPerSeason as $stats) {
 	</thead>
 	<tbody>
 <?php
+$totalMatches = 0;
+$totalGoals = 0;
+$totalPasses = 0;
+$totalPoints = 0;
 $i=0;
 $totalStats = $player->__get('leagueTotalStats');
 foreach ($totalStats as $stats) {
@@ -198,7 +202,7 @@ foreach ($lastMatches as $match) {
 			$playerGoals = $homeTeamMatchPlayer->__get('goals');
 			$playerAssists = $homeTeamMatchPlayer->__get('assists');
 			$playerPlusMinus = $homeTeamMatchPlayer->__get('plusminus');
-			$playerTeam = $homeTeamMatchPlayer->__get('id');
+			$playerTeam = $homeTeamPlayer->__get('id');
 			$check = false;
 			break;
 		}
@@ -213,7 +217,7 @@ foreach ($lastMatches as $match) {
 				$playerGoals = $visitorTeamMatchPlayer->__get('goals');
 				$playerAssists = $visitorTeamMatchPlayer->__get('assists');
 				$playerPlusMinus = $visitorTeamMatchPlayer->__get('plusminus');
-				$playerTeam = $visitorTeamMatchPlayer->__get('id');
+				$playerTeam = $visitorTeamPlayer->__get('id');
 				break;
 			}
 		}

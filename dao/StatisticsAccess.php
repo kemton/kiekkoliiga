@@ -443,7 +443,7 @@ class StatisticsAccess extends DatabaseAccess {
 			$commentsAccess = new CommentsAccess();
 			
 			$result = parent::executeStatement($this->GET_MATCH_BY_ID, array("matchid" => $matchId));
-			$match = $result[0];
+			$match = @$result[0];
 			
 			$id = $matchId;
 			$homeTeamId = $match["kotiID"];
@@ -506,8 +506,8 @@ class StatisticsAccess extends DatabaseAccess {
 				$matches = $value["games"];
 				$goals = $value["goals"];
 				$homeGameShots = $value["homeGameShots"];
-				$guesGameShots = $value["guesGameShots"];
-				$shots = $homeGameShots+$guesGameShots;
+				$guestGameShots = $value["guestGameShots"];
+				$shots = $homeGameShots+$guestGameShots;
 				$shotsPerMatch = 0;
 				$goalsPerMatch = 0;
 				$scoringPercent = 0;
@@ -560,8 +560,8 @@ class StatisticsAccess extends DatabaseAccess {
 				$opponentHomeGameShots = $value["opponentHomeGameShots"];
 				$opponentGuestGameShots = $value["opponentGuestGameShots"];
 				$totalShots = $opponentHomeGameShots + $opponentGuestGameShots;
-				$savesPerMatch = round($saves/$matches, 2);
-				$goalsAgainstPerMatch = round($goalsAgainst/$matches, 2);
+				$savesPerMatch = @round($saves/$matches, 2);
+				$goalsAgainstPerMatch = @round($goalsAgainst/$matches, 2);
 				
 				$savesPerMatch = 0;
 				$goalsAgainstPerMatch = 0;

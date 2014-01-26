@@ -42,7 +42,7 @@ include_once (incDir."/statisticsbar.php");
 						$logo = logosmall($team->__get('id'));
 						echo "
 							<td>{$i}.</td>
-							<td>{$logo}<a title=\"{$team->__get('name')}\" href=\"/team/'.{$team->__get('name')}\">{$teamName}</a></td>
+							<td>{$logo}<a title=\"{$team->__get('name')}\" href=\"/team/{$team->__get('name')}\">{$teamName}</a></td>
 							<td>{$attackStats->__get('shots')}</td>
 							<td>{$attackStats->__get('goals')}</td>
 							<td>{$attackStats->__get('shotsPerMatch')}</td>

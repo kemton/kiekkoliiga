@@ -53,22 +53,19 @@ else{
 
 // ---------------------REFORMAT----------------------------------------
 $p = $match->__get("periodStats");
-$homeTeamSaves1 = $p['home']['saves'][1];
-$homeTeamSaves2 = $p['home']['saves'][2];
-$homeTeamSaves3 = $p['home']['saves'][3];
-$homeTeamPossession1 = $p['home']['possession'][1];
-$homeTeamPossession2 = $p['home']['possession'][2];
-$homeTeamPossession3 = $p['home']['possession'][3];
-$visitorTeamSaves1 = $p['visitor']['saves'][1];
-$visitorTeamSaves2 = $p['visitor']['saves'][2];
-$visitorTeamSaves3 = $p['visitor']['saves'][3];
-$visitorTeamPossession1 = $p['visitor']['possession'][1];
-$visitorTeamPossession2 = $p['visitor']['possession'][2];
-$visitorTeamPossession3 = $p['visitor']['possession'][3];
+$homeTeamSaves1 = @$p['home']['saves'][1];
+$homeTeamSaves2 = @$p['home']['saves'][2];
+$homeTeamSaves3 = @$p['home']['saves'][3];
+$homeTeamPossession1 = @$p['home']['possession'][1];
+$homeTeamPossession2 = @$p['home']['possession'][2];
+$homeTeamPossession3 = @$p['home']['possession'][3];
+$visitorTeamSaves1 = @$p['visitor']['saves'][1];
+$visitorTeamSaves2 = @$p['visitor']['saves'][2];
+$visitorTeamSaves3 = @$p['visitor']['saves'][3];
+$visitorTeamPossession1 = @$p['visitor']['possession'][1];
+$visitorTeamPossession2 = @$p['visitor']['possession'][2];
+$visitorTeamPossession3 = @$p['visitor']['possession'][3];
 // ---------------------REFORMAT----------------------------------------
-
-$homeTeamShootings = $visitorTeamSaves1 + $visitorTeamSaves2 + $visitorTeamSaves3 + $homeTeamGoals;
-$visitorTeamShootings = $homeTeamSaves1 + $homeTeamSaves2 + $homeTeamSaves3 + $visitorTeamGoals;
 
 echo '<style>table#gameBox {
 font-family: arial, helvetica; 
@@ -97,8 +94,11 @@ $homeTeamGoals = $match->__get("homeTeamGoals");
 $visitorTeamGoals = $match->__get("visitorTeamGoals");
 $walkover = $match->__get("walkover");
 
+$homeTeamShootings = $visitorTeamSaves1 + $visitorTeamSaves2 + $visitorTeamSaves3 + $homeTeamGoals;
+$visitorTeamShootings = $homeTeamSaves1 + $homeTeamSaves2 + $homeTeamSaves3 + $visitorTeamGoals;
+
 echo "<p>{$match->__get("league")} {$seasonName} {$stage}</p>";
-echo "<h3>".$homeTeamLogo."<a class=\"otsikko\" href=\"/tilastot/?tilasto=joukkue&id=$homeTeamNameID&kausi=$kausi\">". $homeTeamName . "</a> - ".$visitorTeamLogo."<a class=\"otsikko\" href=\"/tilastot/?tilasto=joukkue&id=$visitorTeamNameID&kausi=$kausi\">" . $visitorTeamName . "</a> ";
+echo "<h3>{$homeTeamLogo}<a class=\"otsikko\" href=\"/team/{$homeTeamName}\">{$homeTeamName}</a> - {$visitorTeamLogo}<a class=\"otsikko\" href=\"/team/{$visitorTeamName}\">{$visitorTeamName}</a> ";
 
 if ($walkover == 'koti'){
 	echo "5 - 0 luov.";

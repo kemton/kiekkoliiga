@@ -360,7 +360,7 @@ function printStatsPerCompetition($statsRows){
 			$pelaajaID = $rivi["pelaajaID"];
         	$nimi = $rivi["nimi"];
 		
-		$t_pelaaja = "<a href=\"/tilastot/?tilasto=pelaaja&id=$pelaajaID&kausi=$kau\">$nimi</a>";
+		$t_pelaaja = "<a href=\"/player/{$nimi}\">$nimi</a>";
 		
 		$pperot = number_format($rivi["pperot"], 2, '.', '');
 		

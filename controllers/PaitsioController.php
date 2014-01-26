@@ -5,7 +5,7 @@ class PaitsioController extends Controller {
 		try {
 			parent::execute($request);
 			
-			$id = $request[1];
+			$id = @$request[1];
 			$info = new InformationAccess();
 			
 			if ($id != null && is_numeric($id)) {
@@ -13,7 +13,7 @@ class PaitsioController extends Controller {
 				$_REQUEST["paitsioArticle"] = serialize($onePaitsio);
 				
 				// Update read count
-				if($_SESSION["read"] <> "paitsio#".$id) {
+				if(isset($_SESSION["read"]) && $_SESSION["read"] <> "paitsio#".$id) {
 					$readCount = $info->updatePaitsioReadCount($id);
 					$_SESSION["read"] = "paitsio#".$id;
 				}

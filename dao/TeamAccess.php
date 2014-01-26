@@ -87,7 +87,7 @@ class TeamAccess extends DatabaseAccess {
 	public function getTeamById($teamid) {
 		try {
 			$key = parent::executeStatement($this->GET_TEAM_BY_ID, array("teamid" => $teamid));
-			$team = new Team($key["0"]["joukkueID"], $key["0"]["nimi"], $key["0"]["lyhenne"], $key["0"]["kotipaita"], $key["0"]["vieraspaita"], $key["0"]["irc"]);
+			$team = @new Team($key["0"]["joukkueID"], $key["0"]["nimi"], $key["0"]["lyhenne"], $key["0"]["kotipaita"], $key["0"]["vieraspaita"], $key["0"]["irc"]);
 			foreach ($key as $value) {
 				$value["vastuuhklo"] = ($value["vastuuhklo"] == 1) ? true : false;
 				$player = new Player($value["pelaajaID"], $value["playername"], $key["0"]["joukkueID"], $value["entiset"], $value["vastuuhklo"], null);

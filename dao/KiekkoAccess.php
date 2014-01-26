@@ -14,39 +14,39 @@ class KiekkoAccess extends DatabaseAccess {
 			
 			if ($json <> NULL) {
 				$kPlayer = new KiekkoPlayer();
-				$kPlayer->__set(id, $json->id);
-				$kPlayer->__set(name, $json->name);
-				$kPlayer->__set(isVIP, $json->vip);
-				$kPlayer->__set(country, $json->country);
-				$kPlayer->__set(team, $json->membership->team->name);
-				$kPlayer->__set(created, $json->created);
-				$kPlayer->__set(lookingForTeam, $json->lft);
-				$kPlayer->__set(experienceLevel, $json->experience);
-				$kPlayer->__set(autoplayLevel, $json->stars);
-				$kPlayer->__set(leftDuringGame, $json->fled);
-				$kPlayer->__set(lastOnline, $json->last_seen);
-				$kPlayer->__set(freeText, $json->freetext);
-				$kPlayer->__set(hideStats, $json->hide_stats);
+				$kPlayer->__set("id", $json->id);
+				$kPlayer->__set("name", $json->name);
+				$kPlayer->__set("isVIP", $json->vip);
+				$kPlayer->__set("country", $json->country);
+				$kPlayer->__set("team", $json->membership->team->name);
+				$kPlayer->__set("created", $json->created);
+				$kPlayer->__set("lookingForTeam", $json->lft);
+				$kPlayer->__set("experienceLevel", $json->experience);
+				$kPlayer->__set("autoplayLevel", $json->stars);
+				$kPlayer->__set("leftDuringGame", $json->fled);
+				$kPlayer->__set("lastOnline", $json->last_seen);
+				$kPlayer->__set("freeText", $json->freetext);
+				$kPlayer->__set("hideStats", $json->hide_stats);
 				
 				if (!$json->hide_stats) {
 					$playerStatsList = array();
 					foreach ($json->stats as $stats) {
 						$kiekkoPlayerStats = new KiekkoPlayerStats();
-						$kiekkoPlayerStats->__set(team, $stats->team);
-						$kiekkoPlayerStats->__set(goals, $stats->goals);
-						$kiekkoPlayerStats->__set(assists, $stats->assist);
-						$kiekkoPlayerStats->__set(points, $stats->goals + $stats->assist);
-						$kiekkoPlayerStats->__set(plusminus, $stats->plusminus);
-						$kiekkoPlayerStats->__set(p, $stats->p);
-						$kiekkoPlayerStats->__set(o, $stats->o);
-						$kiekkoPlayerStats->__set(g, $stats->g);
-						$kiekkoPlayerStats->__set(s, $stats->s);
-						$kiekkoPlayerStats->__set(e, $stats->e);
-						$kiekkoPlayerStats->__set(rt, $stats->rt);
-						$kiekkoPlayerStats->__set(ro, $stats->ro);
+						$kiekkoPlayerStats->__set("team", $stats->team);
+						$kiekkoPlayerStats->__set("goals", $stats->goals);
+						$kiekkoPlayerStats->__set("assists", $stats->assist);
+						$kiekkoPlayerStats->__set("points", $stats->goals + $stats->assist);
+						$kiekkoPlayerStats->__set("plusminus", $stats->plusminus);
+						$kiekkoPlayerStats->__set("p", $stats->p);
+						$kiekkoPlayerStats->__set("o", $stats->o);
+						$kiekkoPlayerStats->__set("g", $stats->g);
+						$kiekkoPlayerStats->__set("s", $stats->s);
+						$kiekkoPlayerStats->__set("e", $stats->e);
+						$kiekkoPlayerStats->__set("rt", $stats->rt);
+						$kiekkoPlayerStats->__set("ro", $stats->ro);
 						$playerStatsList[] = $kiekkoPlayerStats;
 					}
-					$kPlayer->__set(kiekkoPlayerStats, $playerStatsList);
+					$kPlayer->__set("kiekkoPlayerStats", $playerStatsList);
 				}
 				
 				return $kPlayer;

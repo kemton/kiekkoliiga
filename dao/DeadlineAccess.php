@@ -31,9 +31,9 @@ class DeadlineAccess extends DatabaseAccess {
 	public function getCurrentDeadline() {
 		try {
 			$result = parent::executeStatement($this->GET_CURRENT_DEADLINE, array());
-			$id = $result[0]["id"];
-			$name = $result[0]["name"];
-			$ends = $result[0]["ends"];
+			$id = @$result[0]["id"];
+			$name = @$result[0]["name"];
+			$ends = @$result[0]["ends"];
 			
 			$deadline = new Deadline($id, $name, null, $ends, null, null);
 		} catch (Exception $e) {
