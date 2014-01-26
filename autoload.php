@@ -2,6 +2,8 @@
 function __autoload($class) {
 	if (file_exists($class.'.php')) {
 		require_once $class.'.php';
+	} else if (file_exists('helpers/'.$class.'.php')) {
+		require_once 'helpers/'.$class.'.php';
 	} else if (file_exists('controllers/'.$class.'.php')) {
 		require_once 'controllers/'.$class.'.php';
 	} else if (file_exists('dao/'.$class.'.php')) {

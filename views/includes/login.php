@@ -1,7 +1,4 @@
-<?php
-if(!isset($_SESSION["user"]))
-{
-?>
+<?php if(!ApplicationHelper::current_user()) { ?>
 <form action="/forum/index.php?action=login2" method="post" accept-charset="ISO-8859-1">
 	<input type="hidden" name="cookielength" value="-1" />
 	<input type="hidden" name="hash_passwrd" value="" />
@@ -35,8 +32,8 @@ if(!isset($_SESSION["user"]))
 	<tr>
 		<td valign="top" style="padding: 5px; padding-left: 7px;padding-right: 7px;">
 		<?php
+
 		$user = unserialize($_SESSION["user"]); // User Object
-		
 		
 		// user has player profile?
 		if ($user->__get('player') <> NULL) {
@@ -65,7 +62,6 @@ if(!isset($_SESSION["user"]))
 		
 		echo '<a href="/user">Käyttäjän asetukset</a><br />';
 		
-		
 		if ($user->__get('isReferee')) { echo '<a href="/upload">Pelin lisääminen</a><br />'; }
 		echo '<a href="/forum/index.php?action=logout;' . $context['session_var'] . '=' . $context['session_id'] . '">Kirjaudu ulos</a>';
 		
@@ -73,13 +69,8 @@ if(!isset($_SESSION["user"]))
 			if ($player->__get('isAdmin')) {
 				echo '<div style="float: right;"><a href="/admin">Hallinta</a></div>';
 			}
-		}
-		
-		?>
+		} ?>
 		</td>
 	</tr>
 </table>
-<?
-}
-?>
-
+<?php } ?>
