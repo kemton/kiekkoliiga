@@ -1,8 +1,5 @@
+<?php include_once (incDir."/rightbar.php"); ?>
 <?php
-include_once (incDir."/header.php");
-include_once (incDir."/navigation.php");
-include_once (incDir."/leftbar.php");
-include_once (incDir."/rightbar.php");
 
 $user = unserialize($_SESSION["user"]);
 
@@ -101,6 +98,3 @@ $isBoard = $user->__get("isAdmin");
 			?>
 		</div>
 	</div>
-<?php
-include_once (incDir."/footer.php");
-?>

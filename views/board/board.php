@@ -1,13 +1,5 @@
-<?php
-include_once (incDir."/header.php");
-include_once (incDir."/navigation.php");
-include_once (incDir."/leftbar.php");
-include_once (incDir."/rightbar.php");
-
-
-$page = $_REQUEST["pageObject"];
-
-?>
+<?php include_once (incDir."/rightbar.php"); ?>
+<?php $page = $_REQUEST["pageObject"]; ?>
 <div id="content">
 	<div class="box">
 		<div class="top">
@@ -17,6 +9,3 @@ $page = $_REQUEST["pageObject"];
 			<?php echo($page->__get("text")); ?>
 		</div>
 	</div>
-<?php
-include_once (incDir."/footer.php");
-?>

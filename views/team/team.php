@@ -1,9 +1,4 @@
-<?php
-include_once (incDir."/header.php");
-include_once (incDir."/navigation.php");
-include_once (incDir."/leftbar.php");
-include_once (incDir."/statisticsbar.php");
-?>
+<?php include_once (incDir."/statisticsbar.php"); ?>
 <div id="content">
 	<div class="box">
 		<div class="top">
@@ -584,6 +579,3 @@ echo '</table>';
 			
 		</div>
 	</div>
-<?php
-include_once(incDir."/footer.php");
-?>

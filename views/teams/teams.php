@@ -1,9 +1,4 @@
-<?php
-include_once (incDir."/header.php");
-include_once (incDir."/navigation.php");
-include_once (incDir."/leftbar.php");
-include_once (incDir."/rightbar.php");
-?>
+<?php include_once (incDir."/rightbar.php"); ?>
 <div id="content">
 	<div class="content">
 			<?php
@@ -27,6 +22,3 @@ new Debug(unserialize($_REQUEST["teamList"]));
 ?>
 
 	</div>
-<?php
-include_once (incDir."/footer.php");
-?>

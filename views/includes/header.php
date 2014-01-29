@@ -1,6 +1,3 @@
-<?php
-include("functionInclude.php");
-?>
 <!DOCTYPE html>
 <html lang="fi">
 <head>

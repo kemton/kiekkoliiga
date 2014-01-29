@@ -1,9 +1,5 @@
+<?php include_once (incDir."/statisticsbar.php"); ?>
 <?php
-include_once (incDir."/header.php");
-include_once (incDir."/navigation.php");
-include_once (incDir."/leftbar.php");
-include_once (incDir."/statisticsbar.php");
-
 $player = unserialize($_REQUEST["playerStats"]);
 $team = $player->__get("team");
 ?>
@@ -328,6 +324,3 @@ echo "<tr>
 <?php } ?>
 		</div>
 	</div>
-<?php
-include_once (incDir."/footer.php");
-?>
