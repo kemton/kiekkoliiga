@@ -1,14 +1,12 @@
-<?php include_once (incDir."/statisticsbar.php"); ?>
 <?php
 $player = unserialize($_REQUEST["playerStats"]);
 $team = $player->__get("team");
 ?>
-<div id="content">
-	<div class="box">
-		<div class="top">
-			<div class="padding">Tilastot</div>
-		</div>
-		<div class="content">
+<div class="box">
+	<div class="top">
+		<div class="padding">Tilastot</div>
+	</div>
+	<div class="content">
 <?php if ($team->__get("id") <> 0) { ?>
 <div width="40%" style="border: 1px solid #c0c7cc; float:right;">
 	<div class="rivi">

@@ -1,12 +1,9 @@
-<?php include_once (incDir."/statisticsbar.php"); ?>
-<div id="content">
-	<div class="box">
-		<div class="top">
-			<div class="padding">Ottelu</div>
-		</div>
-		<div class="content">
+<div class="box">
+	<div class="top">
+		<div class="padding">Ottelu</div>
+	</div>
+	<div class="content">
 <?php
-
 $season = unserialize($_SESSION["season"]);
 $seasonId = $season->__get("id");
 $seasonName = $season->__get("name");

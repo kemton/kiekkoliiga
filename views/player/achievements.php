@@ -1,13 +1,10 @@
-<?php include_once (incDir."/statisticsbar.php"); ?>
-<div id="content">
-	<div class="box">
-		<div class="top">
-			<div class="padding">Player achievements</div>
-		</div>
-		<div class="content">
+<div class="box">
+	<div class="top">
+		<div class="padding">Player achievements</div>
+	</div>
+	<div class="content">
 <?php
 /**** Achievements ****/
-
 $achievements = unserialize($_REQUEST["playerAchievements"]);
 if (unserialize($_REQUEST["playerAchievements"]) <> NULL) {
 	echo "<h4>Saavutukset:</h4>";
@@ -18,6 +15,5 @@ if (unserialize($_REQUEST["playerAchievements"]) <> NULL) {
 }
 /**** Achievements end ****/
 ?>
-			
-		</div>
 	</div>
+</div>

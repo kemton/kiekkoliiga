@@ -1,14 +1,10 @@
-<?php include_once (incDir."/statisticsbar.php"); ?>
-<div id="content">
-	<div class="box">
-		<div class="top">
-			<div class="padding">Tilastot</div>
-		</div>
-		<div class="content">
-			
-			<?php
-	
-			
+<div class="box">
+	<div class="top">
+		<div class="padding">Tilastot</div>
+	</div>
+	<div class="content">
+
+<?php
 $team = unserialize($_REQUEST["team"]);
 $teamId = $team->__get("id");
 if (!$teamId){

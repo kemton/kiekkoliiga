@@ -1,5 +1,4 @@
 <?php include_once (incDir."/rightbar.php"); ?>
-<div id="content">
 	<div class="content">
 			<?php
 			
