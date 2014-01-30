@@ -11,7 +11,7 @@ class UserController extends Controller {
 			$rightbar->execute($request);
 			if (!is_object($user)) { throw new Exception("Tämä sivu toimii vain sisäänkirjautuneilla.");}
 			
-			$action = $request[1];
+			$action = @$request[1];
 			if ($action <> NULL) {
 				if (method_exists(get_class($this), $action)) {
 					$return = $this->$action($request);

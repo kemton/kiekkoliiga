@@ -133,7 +133,7 @@ function print_row_for_table($data, $column_option = array()) {
 	echo("<tr class=\"{$parity}{$row_number}\">\n");
 
 	foreach($data as $column) {
-		echo("\t<td" . $column_option[$i] . ">" . $column . "</td>\n");
+		echo("\t<td>" . $column . "</td>\n");
 	}
 	echo("</tr>\n");
 }

@@ -11,7 +11,7 @@ class UploadController extends Controller {
 			$rightbar = new RightbarController();
 			$rightbar->execute($request);
 			
-			$action = $request[1];
+			$action = @$request[1];
 			if ($action <> NULL) {
 				if (method_exists(get_class($this), $action)) {
 					$return = $this->$action($request);

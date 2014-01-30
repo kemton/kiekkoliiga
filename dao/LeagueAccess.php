@@ -53,13 +53,13 @@ class LeagueAccess extends DatabaseAccess {
 		try {
 			$seasonAccess = new SeasonAccess();
 			$leagueResult = parent::executeStatement($this->GET_LEAGUES_DATA_BY_LEAGUEID, array("leagueId" => $leagueId));
-			$season = $seasonAccess->getSeasonById($leagueResult[0]["kausiID"]);
+			@$season = $seasonAccess->getSeasonById($leagueResult[0]["kausiID"]);
 			$league = new League;
-			$league->__set('id', $leagueResult[0]["sarjaID"]);
-			$league->__set('leagueLevel', $leagueResult[0]["sarjataso"]);
-			$league->__set('name', $leagueResult[0]["sarjaNimi"]);
+			@$league->__set('id', $leagueResult[0]["sarjaID"]);
+			@$league->__set('leagueLevel', $leagueResult[0]["sarjataso"]);
+			@$league->__set('name', $leagueResult[0]["sarjaNimi"]);
 			$league->__set('season', $season);
-			$league->__set('conference', $leagueResult[0]["lohkot"]);
+			@$league->__set('conference', $leagueResult[0]["lohkot"]);
 			
 			foreach ($leagueResult as $value) {
 				$leagueSteer = new LeagueSteer;
