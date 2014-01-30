@@ -13,7 +13,7 @@ class BoardInfoController extends Controller {
 				$_REQUEST["boardInfo"] = serialize($oneBoardInfo);
 				
 				// Update read count
-				if($_SESSION["read"] <> "paitsio#".$id) {
+				if(@$_SESSION["read"] <> "paitsio#".$id) {
 					$readCount = $boardinfo->updatePaitsioReadCount($id);
 					$_SESSION["read"] = "paitsio#".$id;
 				}
