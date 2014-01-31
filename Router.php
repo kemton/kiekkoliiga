@@ -104,12 +104,7 @@ class Router {
 		if ($action == 'ajax'){ include(viewDir . $action . "/" . $controller[1]); return null; }
 		// if smf logged in
 		if ($context["user"]["is_logged"] == 1) { $this->nextController($context, 'login'); }
-		//  && !isset($_SESSION["user"])
 		
-		/*if ($this->actions[$action] == null && $action <> '') {
-			$action = "PageController";
-			$target = $this->nextController($controller, $action);
-		}*/
 		if ($action == null) {
 			$target = $this->nextController($controller, $target);
 		} else {
@@ -117,19 +112,6 @@ class Router {
 		}
 		
 		$_REQUEST["page"] = $target;
-		
-		
-		// import target page
-		/* PageController fix test
-		$isFolder = explode('/', $target);
-		$folderAppend = "";
-		if($controller[0] && $target != "exception.php") {
-			if (count($isFolder) >= 2) {
-				$folderAppend = explode('/', $isFolder) . "/";
-			} else {
-				$folderAppend = $controller[0] . "/";
-			}
-		}*/
 		
 		$folderAppend = "";
 		if($controller[0] && $target != "exception.php") {
@@ -146,15 +128,11 @@ class Router {
 	}
 
 	private function nextController($controller, $action) {
-	
-		// Loopping actions while action is null
-		while (@$this->actions[$action] != null) {
-			$actionValue = $this->actions[$action];
-			$action = $this->controllerHandler($controller, $actionValue);
-		}
+
+		$action = $this->controllerHandler($controller, $this->actions[$action]);
 		
 		// Seek right page
-		if ($this -> pages[$action] <> null) {
+		if (isset($this->pages[$action])) {
 			$target = $this->pages[$action];
 		} else if ($target <> FALSE) {
 			$target = $this->pages["exceptionPage"];
