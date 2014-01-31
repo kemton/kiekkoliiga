@@ -247,6 +247,8 @@ class PlayerAccess extends DatabaseAccess {
 			$kiekkoAccess = new KiekkoAccess();
 			$kiekkoPlayer = $kiekkoAccess->getKiekkoPlayerByPlayerName($playerName);
 			$playerStats->__set('kiekkoPlayer', $kiekkoPlayer);
+
+			$playerStats->__set('suspensionsList', $this->getPlayerSuspensionsByName($playerName));
 			
 		} catch (Exception $e) {
 			throw $e;
@@ -382,11 +384,22 @@ class PlayerAccess extends DatabaseAccess {
 	
 	public function getPlayerSuspensionsByName($playerName) {
 		try {
-			$key = parent::executeStatement($this->GET_PLAYER_SUSPENSIONS_BY_NAME, array(":playerName" => $playerName));
+			$suspensions = parent::executeStatement($this->GET_PLAYER_SUSPENSIONS_BY_NAME, array(":playerName" => $playerName));
+			
+			$list = array();
+			foreach ($suspensions as $suspension) {
+				$suspensionObj = new PlayerSuspension();
+				$suspensionObj->__set('description', $suspension["kielto"]);
+				$suspensionObj->__set('length', $suspension["pituus"]);
+				$suspensionObj->__set('type', $suspension["tapa"]);
+				$suspensionObj->__set('date', $suspension["aika"]);
+				$list[] = $suspensionObj;
+			}
+
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return $key;
+		return $list;
 	}
 	
 	public function getPlayerIdByUserId($userId) {

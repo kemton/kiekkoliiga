@@ -6,6 +6,7 @@ class Player {
 	protected $previousNames;
 	protected $isAdmin;
 	protected $isBoard;
+	protected $suspensionsList;
 	
 	function __construct($id, $name, $team, $previousNames, $isAdmin, $isBoard) {
 		$this->__set("id", $id);

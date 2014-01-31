@@ -37,11 +37,15 @@ if ($achievements <> NULL) {
 
 <?php
 /**** Rangaistukset ****/
-$user = unserialize($_SESSION["user"]);
-if (!empty($_REQUEST["playerSuspensions"]) && $user->isAdmin()) {
-	echo "<h4>Rangaistukset:</h4>";
-	foreach ($_REQUEST["playerSuspensions"] as $value) {
-		echo "<span class=\"red\">".date('m/Y', strtotime($value["aika"])).": ".$value["kielto"]." - ".$value["pituus"]." ".$value["tapa"]."</span><br />";
+if (isset($_SESSION["user"])) {
+	$user = unserialize($_SESSION["user"]);
+	$suspensionList = $player->__get('suspensionsList');
+	if ($user->__get('isAdmin')) {
+		echo "<h4>Rangaistukset:</h4>";
+		foreach ($suspensionList as $suspension) {
+			$date = new DateTime($suspension->__get('date'));
+			echo "<span class=\"red\">".$date->format('m/Y').": ".$suspension->__get('description')." - ".$suspension->__get('length')." ".$suspension->__get('type')."</span><br />";
+		}
 	}
 }
 /**** Rangaistukset loppuu ****/
