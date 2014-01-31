@@ -4,7 +4,7 @@
 	</div>
 	<div class="content">
 		<?php
-		$season = unserialize($_SESSION["season"]);
+		$season = ApplicationHelper::getSeason();
 		echo "<h2>Kausi {$season->__get('name')}</h2><br />";
 		
 		/*$league = unserialize($_REQUEST["leagues"]);

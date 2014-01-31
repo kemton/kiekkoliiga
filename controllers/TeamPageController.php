@@ -11,7 +11,8 @@ class TeamPageController extends Controller {
 			
 			$id = urldecode($request[1]);
 			
-			$seasonId = unserialize($_SESSION["season"])->__get("id");
+			$season = ApplicationHelper::getSeason();
+			$seasonId = $season->__get("id");
 			$teamAccess = new TeamAccess();
 			$statisticsAccess = new StatisticsAccess();
 

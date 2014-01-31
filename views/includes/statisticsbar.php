@@ -10,7 +10,7 @@
 	</div>
 	-->
 	<?php
-	$season = unserialize($_SESSION["season"]);
+	$season = ApplicationHelper::getSeason();
 	?>
 	<div class="box">
 		<div class="top">

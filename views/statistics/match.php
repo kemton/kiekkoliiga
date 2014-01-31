@@ -4,7 +4,7 @@
 	</div>
 	<div class="content">
 <?php
-$season = unserialize($_SESSION["season"]);
+$season = ApplicationHelper::getSeason();
 $seasonId = $season->__get("id");
 $seasonName = $season->__get("name");
 

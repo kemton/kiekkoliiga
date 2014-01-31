@@ -3,7 +3,7 @@ class StatisticsbarController extends Controller {
 	
 	public function execute($request) {
 		try {
-			$season = unserialize($_SESSION["season"]);
+			$season = ApplicationHelper::getSeason();
 			/* statisticbar */
 			$leagueAccess = new LeagueAccess();
 			$leagues = $leagueAccess->getAllLeaguesBySeasonId($season->__get('id'));

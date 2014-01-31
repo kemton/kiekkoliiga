@@ -97,12 +97,6 @@ class Router {
 			$season = $seasonController->getSeasonById($id);
 			$_SESSION["season"] = serialize($season);
 		}
-		// Set season if is not set before
-		if (!isset($_SESSION["season"])) {
-			$seasonController = new SeasonController();
-			$season = $seasonController->getCurrentSeason();
-			$_SESSION["season"] = serialize($season);
-		}
 		
 		$deadlineController = new DeadlineController();
 		$deadlineController->getFirst();
