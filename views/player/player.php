@@ -174,7 +174,7 @@ foreach ($lastMatches as $match) {
 			$matchPlayerTeamId = $homeTeam->__get('id');
 		}
 	}
-	if ($matchPlayerTeamId == '') {
+	if (!isset($matchPlayerTeamId)) {
 		$matchPlayerTeamId = $visitorTeam->__get('id');
 	}
 	

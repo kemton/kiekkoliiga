@@ -23,7 +23,7 @@ class KiekkoPlayerStats {
 	
 	public function getTeamName($team) {
 		if (is_object($team)) {
-			if (!$team->name == "") {
+			if (isset($team->name)) {
 				return "<a href=\"http://kiekko.tk/teams/team.cws?team=" . urlencode(utf8_decode($team->name)) . "\">{$team->name}</a>";
 			} else {
 				return "(poistettu joukkue)";

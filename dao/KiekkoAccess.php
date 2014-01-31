@@ -12,17 +12,17 @@ class KiekkoAccess extends DatabaseAccess {
 			$param = "user/={$playerName}?fields=id,name,created,vip,country,lft,experience,stars,fled,hide_stats,membership,last_seen,freetext,stats&opt=0";
 			$json = $this->getJsonFromKiekkoApiWithParam($param);
 			
-			if ($json <> NULL) {
+			if (isset($json)) {
 				$kPlayer = new KiekkoPlayer();
 				$kPlayer->__set("id", $json->id);
 				$kPlayer->__set("name", $json->name);
 				$kPlayer->__set("isVIP", $json->vip);
 				$kPlayer->__set("country", $json->country);
-				$kPlayer->__set("team", $json->membership->team->name);
+				if (isset($json->membership->team->name)) $kPlayer->__set("team", $json->membership->team->name);
 				$kPlayer->__set("created", $json->created);
 				$kPlayer->__set("lookingForTeam", $json->lft);
 				$kPlayer->__set("experienceLevel", $json->experience);
-				$kPlayer->__set("autoplayLevel", $json->stars);
+				if (isset($json->stars)) $kPlayer->__set("autoplayLevel", $json->stars);
 				$kPlayer->__set("leftDuringGame", $json->fled);
 				$kPlayer->__set("lastOnline", $json->last_seen);
 				$kPlayer->__set("freeText", $json->freetext);
