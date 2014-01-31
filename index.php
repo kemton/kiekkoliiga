@@ -1,8 +1,5 @@
 <?php
-//error_reporting(E_ERROR | E_WARNING);
-ini_set("display_errors", 1);
-ini_set("display_startup_errors",1);
-error_reporting(-1);
+if (DEBUG_MODE) ini_set("display_errors", 1);ini_set("display_startup_errors",1);error_reporting(-1);
 
 session_start();
 require_once("Config.php");
@@ -24,12 +21,9 @@ if (isset($_REQUEST["standingsList"])) {
 } else if (isset($_REQUEST["leagues"])) {
 	include_once(incDir."/statisticsbar.php");
 }
+
 echo "<div id=\"content\">";
-if ($page <> NULL || $page <> FALSE) {include_once($page);} // valid include
+if (isset($page)) include_once($page);
+
 include_once(incDir."/footer.php");
-
-
-//echo "<pre>";
-//print_r($_SESSION);
-//echo "</pre>";
 ?>
