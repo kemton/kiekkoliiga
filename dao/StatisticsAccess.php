@@ -289,10 +289,6 @@ class StatisticsAccess extends DatabaseAccess {
 				$standingsList[] = $this->getStandingsById($stand);
 			}
 			
-			/*$standingsList = array();
-			$standingsList[] = $this->getStandingsById($league);
-			$standingsList[] = $this->getStandingsById($firstDivision);
-			$standingsList[] = $this->getStandingsById($secondDivision);*/
 		} catch (Exception $e) {
 			throw $e;
 		}

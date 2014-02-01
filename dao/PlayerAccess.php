@@ -163,14 +163,13 @@ class PlayerAccess extends DatabaseAccess {
 			$playerName = $playerData["nimi"];
 			$playerTeamId = $playerData["joukkueID"];
 			$playerOlderName = $playerData["entiset"];
-			$playerIsAdmin = $playerData["vastuuhklo"];
-			$playerIsAdmin = ($playerIsAdmin == 1) ? TRUE : FALSE;
-			
+			$playerIsAdmin = ($playerData["vastuuhklo"] == 1) ? TRUE : FALSE;
 			$isBoard = $this->isBoardByPlayerId($playerId);
-			
+
 			$player = new Player($playerId, $playerName, $playerTeamId, $playerOlderName, $playerIsAdmin, $isBoard);
-			
-			if ($playerTeamId <> NULL || $playerTeamId <> 0) {
+			$player->__set('suspensionsList', $this->getPlayerSuspensionsByName($playerName));
+
+			if (isset($playerTeamId)) {
 				$teamAccess = new TeamAccess();
 				$team = $teamAccess->getTeamById($playerTeamId);
 				$player->__set('team', $team);
@@ -206,11 +205,20 @@ class PlayerAccess extends DatabaseAccess {
 			$teamAccess = new TeamAccess();
 			
 			$id = $playerData["pelaajaID"];
-			$team = $teamAccess->getTeamById($playerData["joukkueID"]);
+			$playerTeamId = $playerData["joukkueID"];
 			$previousNames = $playerData["entiset"];
 			$isAdmin = ($playerData["vastuuhklo"] == 1) ? TRUE : FALSE;
-			$isBoard = ($playerData["vastuuhklo"] == 1) ? TRUE : FALSE;
-			$player = new Player($id, $playerName, $team, $previousNames, $isAdmin, $isBoard);
+			$isBoard = $this->isBoardByPlayerId($id);
+
+			$player = new Player($id, $playerName, $playerTeamId, $previousNames, $isAdmin, $isBoard);
+			$player->__set('suspensionsList', $this->getPlayerSuspensionsByName($playerName));
+
+			if (isset($playerTeamId)) {
+				$teamAccess = new TeamAccess();
+				$team = $teamAccess->getTeamById($playerTeamId);
+				$player->__set('team', $team);
+			}
+
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -228,9 +236,9 @@ class PlayerAccess extends DatabaseAccess {
 			$isAdmin = $player->__get("isAdmin");
 			$isBoard = $player->__get("isBoard");
 			/* ---------------------------------- */
-			
-			
+
 			$playerStats = new PlayerStats($id, $name, $team, $previousNames, $isAdmin, $isBoard);
+			$playerStats->__set('suspensionsList', $player->__get("suspensionsList"));
 			
 			$statsPerSeason = $this->getPlayerStatsPerSeasonByName($playerName);
 			$playerStats->__set('statsPerSeason', $statsPerSeason);
@@ -247,8 +255,6 @@ class PlayerAccess extends DatabaseAccess {
 			$kiekkoAccess = new KiekkoAccess();
 			$kiekkoPlayer = $kiekkoAccess->getKiekkoPlayerByPlayerName($playerName);
 			$playerStats->__set('kiekkoPlayer', $kiekkoPlayer);
-
-			$playerStats->__set('suspensionsList', $this->getPlayerSuspensionsByName($playerName));
 			
 		} catch (Exception $e) {
 			throw $e;
@@ -404,13 +410,23 @@ class PlayerAccess extends DatabaseAccess {
 	
 	public function getPlayerIdByUserId($userId) {
 		try {
-			$key = parent::executeStatement($this->GET_PLAYER_BY_USER_ID, array(":memberId" => $userId));
-			if (empty($key)) { throw new Exception('User not found');}
-			$playerId = $key[0]["pelaajaID"];
+			$suspensions = parent::executeStatement($this->GET_PLAYER_BY_USER_ID, array(":memberId" => $userId));
+			//if (empty($suspensions)) { throw new Exception('User not found');}
+
+			$list = array();
+			foreach ($suspensions as $suspension) {
+				$suspensionObj = new PlayerSuspension();
+				$suspensionObj->__set('description', $suspension["kielto"]);
+				$suspensionObj->__set('length', $suspension["pituus"]);
+				$suspensionObj->__set('type', $suspension["tapa"]);
+				$suspensionObj->__set('date', $suspension["aika"]);
+				$list[] = $suspensionObj;
+			}
+
 		} catch (Exception $e) {
 			throw $e;
 		}
-		return $playerId;
+		return $list;
 	}
 	
 	public function isUserReferee($memberId) {

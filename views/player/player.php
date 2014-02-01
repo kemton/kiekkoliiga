@@ -39,10 +39,10 @@ if ($achievements <> NULL) {
 /**** Rangaistukset ****/
 if (isset($_SESSION["user"])) {
 	$user = unserialize($_SESSION["user"]);
-	$suspensionList = $player->__get('suspensionsList');
+	$suspensionsList = $player->__get('suspensionsList');
 	if ($user->__get('isAdmin')) {
 		echo "<h4>Rangaistukset:</h4>";
-		foreach ($suspensionList as $suspension) {
+		foreach ($suspensionsList as $suspension) {
 			$date = new DateTime($suspension->__get('date'));
 			echo "<span class=\"red\">".$date->format('m/Y').": ".$suspension->__get('description')." - ".$suspension->__get('length')." ".$suspension->__get('type')."</span><br />";
 		}
