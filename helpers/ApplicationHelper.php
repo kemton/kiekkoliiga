@@ -14,8 +14,8 @@ class ApplicationHelper {
 	public static function getSeason() {
 		
 		if (!isset($_SESSION["season"])) {
-			$seasonController = new SeasonController();
-			$_SESSION["season"] = serialize($seasonController->getCurrentSeason());
+			$seasonAccess = new SeasonAccess();
+			$_SESSION["season"] = serialize($seasonAccess->getCurrentSeason());
 		}
 		return unserialize($_SESSION["season"]);
 	}

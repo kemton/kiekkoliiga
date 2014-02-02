@@ -6,7 +6,7 @@ class DeadlineController extends Controller {
 		try {	
 			parent::execute($request);
 			$seasonAccess = new SeasonAccess();
-			$season = $seasonAccess->getLatestSeason();
+			$season = $seasonAccess->getCurrentSeason();
 			$seasonId = $season->__get("id");
 			
 			$deadlineAccess = new DeadlineAccess();

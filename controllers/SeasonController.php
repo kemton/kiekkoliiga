@@ -1,45 +1,18 @@
 <?php
 class SeasonController extends Controller {
 	
-	/*public function execute($request) {
+	public function execute($request) {
 		try {
-			parent::execute($request);
-			
-			$return = "home";
+			$seasonid = $_GET["id"];
+
+			$seasonAccess = new SeasonAccess();
+			$_SESSION["season"] = serialize($seasonAccess->getSeasonById($seasonid));
+
+			header("Location: /statistics");
 		} catch (Exception $e) {
 			throw $e;
 		}
 		return $return;
-	}*/
-	
-	public function getSeasonById($id) {
-		try {
-			$seasonAccess = new SeasonAccess();
-			$season = $seasonAccess->getSeasonById($id);
-		} catch (Exception $e) {
-			throw $e;
-		}
-		return $season;
-	}
-	
-	public function getCurrentSeason() {
-		try {
-			$settingsAccess = new SettingsAccess();
-			$season = $settingsAccess->getCurrentSeason();
-		} catch (Exception $e) {
-			throw $e;
-		}
-		return $season;
-	}
-	
-	public function getLatestSeason() {
-		try {
-			$seasonAccess = new SeasonAccess();
-			$season = $seasonAccess->getLatestSeason();
-		} catch (Exception $e) {
-			throw $e;
-		}
-		return $season;
 	}
 	
 }

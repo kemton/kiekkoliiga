@@ -22,7 +22,7 @@ class SeasonAccess extends DatabaseAccess {
 		return $season;
 	}
 	
-	public function getLatestSeason() {
+	public function getCurrentSeason() {
 		try {
 			$seasonResult = parent::executeStatement($this->GET_LATEST_SEASON, array());
 			$id = $seasonResult[0]["kausiID"];

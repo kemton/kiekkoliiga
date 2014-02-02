@@ -81,7 +81,8 @@ class Router {
 		"hall-of-fame" => "PageController",
 		"unity" => "UnityController",
 		"upload" => "UploadController",
-		"user" => "UserController"
+		"user" => "UserController",
+		"season" => "SeasonController"
 		);
 	}
 
@@ -89,14 +90,6 @@ class Router {
 		// default page
 		$target = "home";
 		$action = $controller[0];
-		
-		// Save new season to session
-		if (isset($_REQUEST["season"])) {
-			$id = $_REQUEST["season"];
-			$seasonController = new SeasonController();
-			$season = $seasonController->getSeasonById($id);
-			$_SESSION["season"] = serialize($season);
-		}
 		
 		$deadlineController = new DeadlineController();
 		$deadlineController->getFirst();

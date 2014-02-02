@@ -36,9 +36,9 @@
 			?>
 			<a href="/statistics/leaguestats">Kiekkoliigan tilastot</a>
 			<br />
-			<form method="get" action="/statistics/">
+			<form method="get" action="/season/">
 				<strong>Valitse kausi:</strong><br />
-				<select name="season">
+				<select name="id">
 					<?php
 					$seasonsList = unserialize($_REQUEST["seasons"]);
 					$userSeason = unserialize($_SESSION["season"]);
